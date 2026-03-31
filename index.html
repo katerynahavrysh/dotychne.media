@@ -111,15 +111,16 @@
     overflow: hidden;
   }
 
-  /* Кружок зміщено вліво */
+  /* Кружок зміщено вправо */
   .hero-bg-logo {
     position: absolute;
     top: 50%;
-    left: 15%;
+    right: 5%;
+    left: auto;
     transform: translateY(-50%);
-    width: 60vw;
-    max-width: 700px;
-    opacity: 0.04;
+    width: 55vw;
+    max-width: 650px;
+    opacity: 0.05;
     pointer-events: none;
     animation: slowRotate 30s linear infinite;
   }
@@ -218,15 +219,7 @@
   .btn-ghost::before { background: rgba(255,255,255,0.08); }
   .btn-ghost:hover { color: var(--white); }
 
-  .scroll-line {
-    position: absolute;
-    bottom: 0; left: 48px;
-    width: 1px; height: 0;
-    background: rgba(255,255,255,0.2);
-    animation: growLine 1s ease forwards 1.5s;
-  }
-
-  @keyframes growLine { to { height: 80px; } }
+  .scroll-line { display: none; }
 
   .divider { width: 100%; height: 1px; background: rgba(255,255,255,0.1); }
 
@@ -479,6 +472,8 @@
     .about-grid { grid-template-columns: 1fr; gap: 48px; }
     .values { grid-template-columns: 1fr; }
     .topics-section { padding: 80px 24px; }
+    .topic-tag { font-size: 8px; letter-spacing: 0.08em; }
+    .topic-meta { gap: 12px; }
     .newsletter-section { padding: 80px 24px; grid-template-columns: 1fr; gap: 48px; }
     .social-strip { padding: 0 24px; overflow-x: auto; }
     .social-item { padding: 20px 24px; }
