@@ -805,7 +805,12 @@
 
       if (!res.ok) throw new Error('Notion API error');
       const data = await res.json();
-      const articles = parseNotion(data);
+      let articles = parseNotion(data);
+      const urlCat = new URLSearchParams(window.location.search).get('cat');
+      if (urlCat) {
+        const filtered = articles.filter(a => a.category.toLowerCase().includes(urlCat));
+        articles = filtered.length ? filtered : articles;
+      }
       if (articles.length) {
         renderArticles(articles);
       } else {
@@ -890,7 +895,11 @@
   ];
 
   function showDemoWithNotice() {
-    renderArticles(DEMO_ARTICLES);
+    const urlCat = new URLSearchParams(window.location.search).get('cat');
+    const filtered = urlCat
+      ? DEMO_ARTICLES.filter(a => a.category.toLowerCase().includes(urlCat))
+      : DEMO_ARTICLES;
+    renderArticles(filtered.length ? filtered : DEMO_ARTICLES);
     // Add demo banner
     const banner = document.createElement('div');
     banner.style.cssText = 'background:rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.1);padding:12px 48px;font-size:12px;color:rgba(255,255,255,0.4);letter-spacing:0.06em;display:flex;justify-content:space-between;align-items:center;';
@@ -914,6 +923,18 @@
   // ── Init ──
   // Load from server env vars (no token needed from user)
   loadArticles();
+
+  // ── Activate category from URL param ──
+  const urlCat = new URLSearchParams(window.location.search).get('cat');
+  if (urlCat) {
+    document.querySelectorAll('.cat-btn').forEach(btn => {
+      if (btn.dataset.cat === urlCat) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+  }
 
   // ── Warmup functions so article pages load faster ──
   setTimeout(() => {
