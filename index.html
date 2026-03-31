@@ -25,7 +25,6 @@
     overflow-x: hidden;
   }
 
-  /* Custom cursor */
   .cursor {
     position: fixed;
     width: 12px;
@@ -38,23 +37,24 @@
     transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease;
     mix-blend-mode: difference;
   }
-  .cursor.hovering {
-    width: 40px;
-    height: 40px;
-  }
+  .cursor.hovering { width: 40px; height: 40px; }
 
-  /* NAV */
+  /* NAV — затемнення при скролі */
   nav {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    top: 0; left: 0; right: 0;
     z-index: 100;
     padding: 28px 48px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    mix-blend-mode: difference;
+    transition: background 0.3s ease, backdrop-filter 0.3s ease;
+  }
+
+  nav.scrolled {
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   .nav-logo {
@@ -65,11 +65,7 @@
     color: var(--white);
   }
 
-  .nav-logo svg {
-    width: 26px;
-    height: 24px;
-    flex-shrink: 0;
-  }
+  .nav-logo svg { width: 26px; height: 24px; flex-shrink: 0; }
 
   .nav-logo-text {
     font-family: 'Raleway', 'Helvetica Neue', Arial, sans-serif;
@@ -80,11 +76,7 @@
     line-height: 1;
   }
 
-  .nav-links {
-    display: flex;
-    gap: 40px;
-    list-style: none;
-  }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
 
   .nav-links a {
     color: var(--white);
@@ -100,10 +92,8 @@
   .nav-links a::after {
     content: '';
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 1px;
+    bottom: 0; left: 0;
+    width: 0; height: 1px;
     background: var(--white);
     transition: width 0.3s ease;
   }
@@ -121,11 +111,12 @@
     overflow: hidden;
   }
 
+  /* Кружок зміщено вліво */
   .hero-bg-logo {
     position: absolute;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    left: 15%;
+    transform: translateY(-50%);
     width: 60vw;
     max-width: 700px;
     opacity: 0.04;
@@ -134,8 +125,8 @@
   }
 
   @keyframes slowRotate {
-    from { transform: translate(-50%, -50%) rotate(0deg); }
-    to { transform: translate(-50%, -50%) rotate(360deg); }
+    from { transform: translateY(-50%) rotate(0deg); }
+    to { transform: translateY(-50%) rotate(360deg); }
   }
 
   .hero-tag {
@@ -167,10 +158,7 @@
   .hero-title .line:nth-child(2) { animation-delay: 0.65s; }
   .hero-title .line:nth-child(3) { animation-delay: 0.8s; }
 
-  .hero-title .line em {
-    font-style: normal;
-    font-weight: 600;
-  }
+  .hero-title .line em { font-style: normal; font-weight: 600; }
 
   .hero-bottom {
     margin-top: 48px;
@@ -190,10 +178,7 @@
     letter-spacing: 0.02em;
   }
 
-  .hero-cta {
-    display: flex;
-    gap: 20px;
-  }
+  .hero-cta { display: flex; gap: 20px; }
 
   .btn {
     display: inline-flex;
@@ -229,40 +214,23 @@
   .btn:hover { color: var(--black); }
   .btn span { position: relative; z-index: 1; }
 
-  .btn-ghost {
-    border-color: rgba(255,255,255,0.3);
-    color: var(--gray);
-  }
-
+  .btn-ghost { border-color: rgba(255,255,255,0.3); color: var(--gray); }
   .btn-ghost::before { background: rgba(255,255,255,0.08); }
   .btn-ghost:hover { color: var(--white); }
 
-  /* SCROLL LINE */
   .scroll-line {
     position: absolute;
-    bottom: 0;
-    left: 48px;
-    width: 1px;
-    height: 0;
+    bottom: 0; left: 48px;
+    width: 1px; height: 0;
     background: rgba(255,255,255,0.2);
     animation: growLine 1s ease forwards 1.5s;
   }
 
-  @keyframes growLine {
-    to { height: 80px; }
-  }
+  @keyframes growLine { to { height: 80px; } }
 
-  /* DIVIDER */
-  .divider {
-    width: 100%;
-    height: 1px;
-    background: rgba(255,255,255,0.1);
-  }
+  .divider { width: 100%; height: 1px; background: rgba(255,255,255,0.1); }
 
-  /* ABOUT SECTION */
-  .section {
-    padding: 120px 48px;
-  }
+  .section { padding: 120px 48px; }
 
   .section-label {
     font-size: 11px;
@@ -296,13 +264,9 @@
     letter-spacing: -0.01em;
   }
 
-  .about-left h2 strong {
-    font-weight: 600;
-  }
+  .about-left h2 strong { font-weight: 600; }
 
-  .about-right {
-    padding-top: 8px;
-  }
+  .about-right { padding-top: 8px; }
 
   .about-right p {
     font-size: 16px;
@@ -323,14 +287,10 @@
   .value-item {
     padding: 36px 32px;
     border: 1px solid rgba(255,255,255,0.1);
-    position: relative;
-    overflow: hidden;
     transition: background 0.3s ease;
   }
 
-  .value-item:hover {
-    background: rgba(255,255,255,0.04);
-  }
+  .value-item:hover { background: rgba(255,255,255,0.04); }
 
   .value-num {
     font-size: 11px;
@@ -340,19 +300,9 @@
     font-weight: 400;
   }
 
-  .value-title {
-    font-size: 20px;
-    font-weight: 500;
-    margin-bottom: 12px;
-    letter-spacing: -0.01em;
-  }
+  .value-title { font-size: 20px; font-weight: 500; margin-bottom: 12px; letter-spacing: -0.01em; }
 
-  .value-desc {
-    font-size: 14px;
-    color: rgba(255,255,255,0.5);
-    font-weight: 300;
-    line-height: 1.6;
-  }
+  .value-desc { font-size: 14px; color: rgba(255,255,255,0.5); font-weight: 300; line-height: 1.6; }
 
   /* TOPICS */
   .topics-section {
@@ -361,18 +311,7 @@
     color: var(--black);
   }
 
-  .topics-section .section-label {
-    color: rgba(0,0,0,0.4);
-  }
-
-  .topics-section .section-label::after {
-    background: rgba(0,0,0,0.1);
-  }
-
-  .topics-list {
-    display: flex;
-    flex-direction: column;
-  }
+  .topics-list { display: flex; flex-direction: column; }
 
   .topic-item {
     display: flex;
@@ -386,36 +325,17 @@
     color: var(--black);
   }
 
-  .topic-item:hover {
-    padding-left: 20px;
-  }
+  .topic-item:hover { padding-left: 20px; }
+  .topic-item:first-child { border-top: 1px solid rgba(0,0,0,0.1); }
 
-  .topic-item:first-child {
-    border-top: 1px solid rgba(0,0,0,0.1);
-  }
+  .topic-name { font-size: clamp(22px, 3vw, 40px); font-weight: 400; letter-spacing: -0.01em; }
 
-  .topic-name {
-    font-size: clamp(22px, 3vw, 40px);
-    font-weight: 400;
-    letter-spacing: -0.01em;
-  }
+  .topic-meta { display: flex; align-items: center; gap: 24px; }
 
-  .topic-meta {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-  }
-
-  .topic-tag {
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: rgba(0,0,0,0.4);
-  }
+  .topic-tag { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(0,0,0,0.4); }
 
   .topic-arrow {
-    width: 32px;
-    height: 32px;
+    width: 32px; height: 32px;
     border: 1px solid rgba(0,0,0,0.2);
     border-radius: 50%;
     display: flex;
@@ -424,14 +344,8 @@
     transition: background 0.3s ease, border-color 0.3s ease;
   }
 
-  .topic-item:hover .topic-arrow {
-    background: var(--black);
-    border-color: var(--black);
-  }
-
-  .topic-item:hover .topic-arrow svg path {
-    stroke: var(--white);
-  }
+  .topic-item:hover .topic-arrow { background: var(--black); border-color: var(--black); }
+  .topic-item:hover .topic-arrow svg path { stroke: var(--white); }
 
   /* NEWSLETTER */
   .newsletter-section {
@@ -450,18 +364,9 @@
     margin-bottom: 20px;
   }
 
-  .newsletter-left p {
-    font-size: 15px;
-    color: var(--gray);
-    font-weight: 300;
-    line-height: 1.7;
-  }
+  .newsletter-left p { font-size: 15px; color: var(--gray); font-weight: 300; line-height: 1.7; }
 
-  .newsletter-form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
+  .newsletter-form { display: flex; flex-direction: column; gap: 16px; }
 
   .form-row {
     display: flex;
@@ -470,9 +375,7 @@
     transition: border-color 0.3s ease;
   }
 
-  .form-row:focus-within {
-    border-color: var(--white);
-  }
+  .form-row:focus-within { border-color: var(--white); }
 
   .form-row input {
     flex: 1;
@@ -487,9 +390,7 @@
     letter-spacing: 0.04em;
   }
 
-  .form-row input::placeholder {
-    color: rgba(255,255,255,0.3);
-  }
+  .form-row input::placeholder { color: rgba(255,255,255,0.3); }
 
   .form-row button {
     background: var(--white);
@@ -505,16 +406,9 @@
     transition: background 0.3s ease;
   }
 
-  .form-row button:hover {
-    background: var(--light-gray);
-  }
+  .form-row button:hover { background: var(--light-gray); }
 
-  .form-note {
-    font-size: 12px;
-    color: rgba(255,255,255,0.3);
-    font-weight: 300;
-    letter-spacing: 0.04em;
-  }
+  .form-note { font-size: 12px; color: rgba(255,255,255,0.3); font-weight: 300; letter-spacing: 0.04em; }
 
   /* SOCIAL STRIP */
   .social-strip {
@@ -540,21 +434,10 @@
 
   .social-item:first-child { padding-left: 0; }
   .social-item:last-child { border-right: none; padding-right: 0; }
-
   .social-item:hover { color: var(--gray); }
 
-  .social-name {
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .social-handle {
-    font-size: 12px;
-    color: var(--gray);
-    font-weight: 300;
-  }
+  .social-name { font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
+  .social-handle { font-size: 12px; color: var(--gray); font-weight: 300; }
 
   /* FOOTER */
   footer {
@@ -564,30 +447,11 @@
     align-items: flex-end;
   }
 
-  .footer-left {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
+  .footer-left { display: flex; align-items: center; gap: 16px; }
   .footer-logo svg { width: 28px; height: 28px; }
+  .footer-name { font-size: 14px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
+  .footer-right { font-size: 12px; color: var(--gray); font-weight: 300; letter-spacing: 0.04em; text-align: right; }
 
-  .footer-name {
-    font-size: 14px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .footer-right {
-    font-size: 12px;
-    color: var(--gray);
-    font-weight: 300;
-    letter-spacing: 0.04em;
-    text-align: right;
-  }
-
-  /* ANIMATIONS */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
@@ -598,36 +462,25 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* Scroll reveal */
-  .reveal {
-    opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-  }
-
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
   .reveal-delay-1 { transition-delay: 0.1s; }
   .reveal-delay-2 { transition-delay: 0.2s; }
   .reveal-delay-3 { transition-delay: 0.3s; }
   .reveal-delay-4 { transition-delay: 0.4s; }
 
-  /* MOBILE */
   @media (max-width: 768px) {
     nav { padding: 24px 24px; }
     .nav-links { display: none; }
     .hero { padding: 0 24px 48px; }
-    .hero-bg-logo { width: 90vw; }
+    .hero-bg-logo { width: 90vw; left: 5%; }
     .hero-bottom { flex-direction: column; align-items: flex-start; gap: 32px; }
     .section { padding: 80px 24px; }
     .about-grid { grid-template-columns: 1fr; gap: 48px; }
     .values { grid-template-columns: 1fr; }
     .topics-section { padding: 80px 24px; }
     .newsletter-section { padding: 80px 24px; grid-template-columns: 1fr; gap: 48px; }
-    .social-strip { padding: 0 24px; overflow-x: auto; gap: 0; }
+    .social-strip { padding: 0 24px; overflow-x: auto; }
     .social-item { padding: 20px 24px; }
     footer { padding: 40px 24px; flex-direction: column; gap: 24px; align-items: flex-start; }
     .scroll-line { left: 24px; }
@@ -639,8 +492,7 @@
 
 <div class="cursor" id="cursor"></div>
 
-<!-- NAV -->
-<nav>
+<nav id="mainNav">
   <a href="#" class="nav-logo" data-cursor>
     <svg width="26" height="24" viewBox="0 0 253 231" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M86.5557 65.2538C131.952 65.254 168.61 101.363 168.61 145.733C168.61 190.103 131.952 226.214 86.5557 226.214C41.1594 226.214 4.5 190.104 4.5 145.733C4.50018 101.363 41.1595 65.2538 86.5557 65.2538Z" stroke="white" stroke-width="9"/>
@@ -656,7 +508,6 @@
   </ul>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
   <div class="hero-bg-logo">
     <svg viewBox="0 0 253 231" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -686,7 +537,6 @@
 
 <div class="divider"></div>
 
-<!-- ABOUT -->
 <section class="section" id="about">
   <div class="section-label">Про медіа</div>
   <div class="about-grid">
@@ -723,12 +573,10 @@
   </div>
 </section>
 
-<!-- TOPICS -->
 <section class="topics-section" id="topics">
   <div class="section-label" style="color: rgba(0,0,0,0.4);">Теми</div>
-
   <div class="topics-list">
-    <a href="articles.html" class="topic-item" data-cursor>
+    <a href="articles.html?cat=права" class="topic-item" data-cursor>
       <span class="topic-name">Права людини і свобода слова</span>
       <div class="topic-meta">
         <span class="topic-tag">Правозахист</span>
@@ -739,7 +587,7 @@
         </div>
       </div>
     </a>
-    <a href="articles.html" class="topic-item" data-cursor>
+    <a href="articles.html?cat=гранти" class="topic-item" data-cursor>
       <span class="topic-name">Гранти і можливості</span>
       <div class="topic-meta">
         <span class="topic-tag">Громадський сектор</span>
@@ -750,7 +598,7 @@
         </div>
       </div>
     </a>
-    <a href="articles.html" class="topic-item" data-cursor>
+    <a href="articles.html?cat=освіта" class="topic-item" data-cursor>
       <span class="topic-name">Освіта і розвиток</span>
       <div class="topic-meta">
         <span class="topic-tag">Навчання</span>
@@ -761,7 +609,7 @@
         </div>
       </div>
     </a>
-    <a href="articles.html" class="topic-item" data-cursor>
+    <a href="articles.html?cat=медіа" class="topic-item" data-cursor>
       <span class="topic-name">Медіапростір і безпека</span>
       <div class="topic-meta">
         <span class="topic-tag">Медіаграмотність</span>
@@ -772,7 +620,7 @@
         </div>
       </div>
     </a>
-    <a href="articles.html" class="topic-item" data-cursor>
+    <a href="articles.html?cat=нго" class="topic-item" data-cursor>
       <span class="topic-name">Громадські ініціативи</span>
       <div class="topic-meta">
         <span class="topic-tag">НГО</span>
@@ -786,22 +634,20 @@
   </div>
 </section>
 
-<!-- NEWSLETTER -->
 <section class="newsletter-section" id="newsletter">
   <div class="newsletter-left reveal">
     <h2>Будь дотичним</h2>
-    <p>Підписуйся на розсилку — отримуй матеріали, які стосуються тебе, прямо на пошту. </p>
+    <p>Підписуйся на розсилку — отримуй матеріали, які стосуються тебе, прямо на пошту.</p>
   </div>
   <div class="newsletter-form reveal reveal-delay-2">
     <div class="form-row">
       <input type="email" placeholder="твоя@пошта.com">
       <button data-cursor>Підписатись</button>
     </div>
-    <p class="form-note">Підписуючись, ти погоджуєшся з умовами використання. Відписатись можна у будь-який момент. </p>
+    <p class="form-note">Підписуючись, ти погоджуєшся з умовами використання. Відписатись можна у будь-який момент.</p>
   </div>
 </section>
 
-<!-- SOCIAL STRIP -->
 <div class="social-strip">
   <a href="https://www.instagram.com/media.dotychne/" target="_blank" class="social-item" data-cursor>
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -825,7 +671,6 @@
   </a>
 </div>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-left">
     <div class="footer-logo">
@@ -843,7 +688,6 @@
 </footer>
 
 <script>
-  // Custom cursor
   const cursor = document.getElementById('cursor');
   document.addEventListener('mousemove', e => {
     cursor.style.left = e.clientX + 'px';
@@ -855,19 +699,14 @@
     el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
   });
 
-  // Scroll reveal
   const reveals = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
+      if (entry.isIntersecting) entry.target.classList.add('visible');
     });
   }, { threshold: 0.15 });
-
   reveals.forEach(el => observer.observe(el));
 
-  // Newsletter
   document.querySelector('.form-row button').addEventListener('click', () => {
     const input = document.querySelector('.form-row input');
     if (input.value && input.value.includes('@')) {
@@ -876,7 +715,13 @@
     }
   });
 
-  // Warmup Netlify functions in background
+  // Затемнення навбару при скролі
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Warmup
   setTimeout(() => {
     fetch('/.netlify/functions/notion', {
       method: 'POST',
