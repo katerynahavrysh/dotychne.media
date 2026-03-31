@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Статті — Медіа Дотичне</title>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #000000;
+    --white: #ffffff;
+    --gray: #888;
+    --light-gray: #e8e8e8;
+    --border: rgba(255,255,255,0.1);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--black);
+    color: var(--white);
+    cursor: none;
+    overflow-x: hidden;
+  }
+
+  /* CURSOR */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--white);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor.hovering { width: 40px; height: 40px; }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--black);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-top {
+    padding: 20px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--white);
+  }
+
+  .nav-logo-text {
+    font-family: 'Jost', sans-serif;
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  .nav-date {
+    font-size: 12px;
+    color: var(--gray);
+    letter-spacing: 0.08em;
+    font-weight: 300;
+  }
+
+  .nav-categories {
+    border-top: 1px solid var(--border);
+    padding: 0 48px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-categories::-webkit-scrollbar { display: none; }
+
+  .cat-btn {
+    font-family: 'Jost', sans-serif;
+    background: none;
+    border: none;
+    color: var(--gray);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 14px 20px 14px 0;
+    margin-right: 20px;
+    cursor: none;
+    white-space: nowrap;
+    position: relative;
+    transition: color 0.2s ease;
+  }
+
+  .cat-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--white);
+    transition: width 0.3s ease;
+  }
+
+  .cat-btn.active, .cat-btn:hover { color: var(--white); }
+  .cat-btn.active::after, .cat-btn:hover::after { width: calc(100% - 20px); }
+
+  /* MAIN CONTENT */
+  main {
+    padding-top: 110px;
+  }
+
+  /* LOADING */
+  .loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 60vh;
+    gap: 20px;
+  }
+
+  .loading-symbol {
+    width: 48px; height: 44px;
+    animation: spin 2s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .loading-text {
+    font-size: 13px;
+    color: var(--gray);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 300;
+  }
+
+  /* ERROR */
+  .error-state {
+    display: none;
+    padding: 80px 48px;
+    text-align: center;
+  }
+
+  .error-state h2 {
+    font-size: 24px;
+    font-weight: 300;
+    margin-bottom: 12px;
+  }
+
+  .error-state p {
+    font-size: 14px;
+    color: var(--gray);
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+
+  .setup-box {
+    display: inline-block;
+    border: 1px solid var(--border);
+    padding: 32px 40px;
+    text-align: left;
+    max-width: 560px;
+    width: 100%;
+  }
+
+  .setup-box h3 {
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 20px;
+    font-weight: 400;
+  }
+
+  .setup-step {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    align-items: flex-start;
+  }
+
+  .setup-num {
+    width: 24px; height: 24px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: var(--gray);
+    flex-shrink: 0;
+  }
+
+  .setup-step p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.6;
+    font-weight: 300;
+    text-align: left;
+    margin: 0;
+  }
+
+  .setup-step code {
+    background: rgba(255,255,255,0.08);
+    padding: 2px 8px;
+    font-size: 12px;
+    border-radius: 2px;
+    font-family: monospace;
+    color: var(--white);
+  }
+
+  .config-input-row {
+    display: flex;
+    gap: 0;
+    margin-top: 24px;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+
+  .config-input-row input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 14px 18px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    color: var(--white);
+    font-weight: 300;
+  }
+
+  .config-input-row input::placeholder { color: rgba(255,255,255,0.3); }
+
+  .config-input-row button {
+    background: var(--white);
+    border: none;
+    padding: 14px 20px;
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--black);
+    cursor: none;
+  }
+
+  /* ARTICLES GRID */
+  .articles-container {
+    display: none;
+  }
+
+  /* DATE STRIP */
+  .date-strip {
+    border-bottom: 1px solid var(--border);
+    padding: 12px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .date-strip-text {
+    font-size: 11px;
+    color: var(--gray);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 300;
+  }
+
+  .articles-count {
+    font-size: 11px;
+    color: var(--gray);
+    letter-spacing: 0.08em;
+    font-weight: 300;
+  }
+
+  /* HERO ARTICLE */
+  .hero-article {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-article-content {
+    padding: 48px 48px 48px 48px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .hero-article-image {
+    aspect-ratio: 4/3;
+    background: #111;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .hero-article-image img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: 0.8;
+    transition: opacity 0.4s ease;
+  }
+
+  .hero-article:hover .hero-article-image img { opacity: 1; }
+
+  .hero-image-placeholder {
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .article-category {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gray);
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+
+  .hero-article-title {
+    font-size: clamp(28px, 3.5vw, 52px);
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: var(--white);
+    display: block;
+    transition: opacity 0.2s ease;
+  }
+
+  .hero-article-title:hover { opacity: 0.7; }
+
+  .hero-article-excerpt {
+    font-size: 15px;
+    color: rgba(255,255,255,0.6);
+    font-weight: 300;
+    line-height: 1.7;
+    margin-bottom: 32px;
+    flex: 1;
+  }
+
+  .article-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .article-author {
+    font-size: 12px;
+    color: var(--gray);
+    font-weight: 400;
+    letter-spacing: 0.06em;
+  }
+
+  .article-date {
+    font-size: 12px;
+    color: var(--gray);
+    font-weight: 300;
+    letter-spacing: 0.04em;
+  }
+
+  /* SECONDARY GRID */
+  .secondary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .secondary-article {
+    padding: 36px 32px;
+    border-right: 1px solid var(--border);
+    transition: background 0.3s ease;
+    text-decoration: none;
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .secondary-article:last-child { border-right: none; }
+  .secondary-article:hover { background: rgba(255,255,255,0.03); }
+
+  .secondary-article-num {
+    font-size: 11px;
+    color: rgba(255,255,255,0.2);
+    font-weight: 300;
+    letter-spacing: 0.1em;
+  }
+
+  .secondary-article-title {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    flex: 1;
+  }
+
+  .secondary-article-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* LIST ARTICLES */
+  .list-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+  }
+
+  .list-main {
+    border-right: 1px solid var(--border);
+  }
+
+  .list-article {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    padding: 28px 48px;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--white);
+    align-items: start;
+    transition: background 0.3s ease;
+  }
+
+  .list-article:hover { background: rgba(255,255,255,0.02); }
+
+  .list-article-category {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gray);
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  .list-article-title {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+  }
+
+  .list-article-excerpt {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  .list-article-date {
+    font-size: 11px;
+    color: var(--gray);
+    font-weight: 300;
+    white-space: nowrap;
+    padding-top: 4px;
+  }
+
+  /* SIDEBAR */
+  .list-sidebar {
+    padding: 28px 32px;
+  }
+
+  .sidebar-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gray);
+    font-weight: 500;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-tag {
+    display: block;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    transition: color 0.2s ease;
+    cursor: none;
+  }
+
+  .sidebar-tag:hover { color: var(--white); }
+
+  .sidebar-tag span {
+    float: right;
+    font-size: 11px;
+    color: rgba(255,255,255,0.25);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 40px 48px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-logo {
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .footer-name {
+    font-size: 14px; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+
+  .footer-right {
+    font-size: 12px; color: var(--gray);
+    font-weight: 300; letter-spacing: 0.04em; text-align: right;
+  }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    .nav-top { padding: 16px 20px; }
+    .nav-categories { padding: 0 20px; }
+    .hero-article { grid-template-columns: 1fr; }
+    .hero-article-image { order: -1; aspect-ratio: 16/9; }
+    .hero-article-content { padding: 28px 20px; border-right: none; }
+    .secondary-grid { grid-template-columns: 1fr; }
+    .secondary-article { border-right: none; }
+    .list-section { grid-template-columns: 1fr; }
+    .list-main { border-right: none; }
+    .list-article { padding: 20px; grid-template-columns: 1fr; }
+    .list-sidebar { display: none; }
+    .date-strip { padding: 12px 20px; }
+    footer { padding: 28px 20px; flex-direction: column; gap: 16px; align-items: flex-start; }
+    .error-state { padding: 48px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-top">
+    <a href="index.html" class="nav-logo" data-hover>
+      <svg width="26" height="24" viewBox="0 0 253 231" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M86.5557 65.2538C131.952 65.254 168.61 101.363 168.61 145.733C168.61 190.103 131.952 226.214 86.5557 226.214C41.1594 226.214 4.5 190.104 4.5 145.733C4.50018 101.363 41.1595 65.2538 86.5557 65.2538Z" stroke="white" stroke-width="9"/>
+        <path d="M90.8219 2.58978L226.548 196.344" stroke="white" stroke-width="9"/>
+      </svg>
+      <span class="nav-logo-text">медіа дотичне</span>
+    </a>
+    <span class="nav-date" id="todayDate"></span>
+  </div>
+  <div class="nav-categories">
+    <button class="cat-btn active" data-cat="all" data-hover>Всі</button>
+    <button class="cat-btn" data-cat="права" data-hover>Права людини</button>
+    <button class="cat-btn" data-cat="гранти" data-hover>Гранти</button>
+    <button class="cat-btn" data-cat="освіта" data-hover>Освіта</button>
+    <button class="cat-btn" data-cat="медіа" data-hover>Медіапростір</button>
+    <button class="cat-btn" data-cat="нго" data-hover>НГО</button>
+  </div>
+</nav>
+
+<main>
+  <!-- LOADING -->
+  <div class="loading-state" id="loadingState">
+    <svg class="loading-symbol" viewBox="0 0 253 231" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M86.5557 65.2538C131.952 65.254 168.61 101.363 168.61 145.733C168.61 190.103 131.952 226.214 86.5557 226.214C41.1594 226.214 4.5 190.104 4.5 145.733C4.50018 101.363 41.1595 65.2538 86.5557 65.2538Z" stroke="white" stroke-width="6"/>
+      <path d="M90.8219 2.58978L226.548 196.344" stroke="white" stroke-width="6"/>
+    </svg>
+    <span class="loading-text">Завантажуємо статті…</span>
+  </div>
+
+  <!-- ERROR / SETUP -->
+  <div class="error-state" id="errorState">
+    <h2>Підключи Notion</h2>
+    <p>Щоб статті з'явились — введи ID своєї бази даних Notion нижче.<br>Це займе 2 хвилини.</p>
+    <div class="setup-box">
+      <h3>Як налаштувати</h3>
+      <div class="setup-step">
+        <div class="setup-num">1</div>
+        <p>Створи базу даних у Notion з колонками: <code>Title</code>, <code>Excerpt</code>, <code>Category</code>, <code>Author</code>, <code>Date</code>, <code>Published</code> (checkbox)</p>
+      </div>
+      <div class="setup-step">
+        <div class="setup-num">2</div>
+        <p>Зайди на <code>notion.so/my-integrations</code>, створи інтеграцію і скопіюй токен</p>
+      </div>
+      <div class="setup-step">
+        <div class="setup-num">3</div>
+        <p>Відкрий базу даних → «…» → «Add connections» → підключи свою інтеграцію</p>
+      </div>
+      <div class="setup-step">
+        <div class="setup-num">4</div>
+        <p>Скопіюй ID бази з URL: <code>notion.so/workspace/<b>ось-цей-id</b>?v=…</code></p>
+      </div>
+      <div class="config-input-row">
+        <input type="text" id="notionDbId" placeholder="ID бази даних Notion…">
+        <button onclick="saveConfig()" data-hover>Зберегти</button>
+      </div>
+      <div style="margin-top: 12px;">
+        <div class="config-input-row">
+          <input type="text" id="notionToken" placeholder="Notion Integration Token (secret_…)">
+          <button onclick="saveConfig()" data-hover>OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARTICLES -->
+  <div class="articles-container" id="articlesContainer">
+    <div class="date-strip">
+      <span class="date-strip-text" id="dateStripText"></span>
+      <span class="articles-count" id="articlesCount"></span>
+    </div>
+
+    <!-- HERO -->
+    <div class="hero-article" id="heroArticle"></div>
+
+    <!-- SECONDARY -->
+    <div class="secondary-grid" id="secondaryGrid"></div>
+
+    <!-- LIST + SIDEBAR -->
+    <div class="list-section">
+      <div class="list-main" id="listMain"></div>
+      <div class="list-sidebar">
+        <div class="sidebar-label">Теми</div>
+        <a href="articles.html" class="sidebar-tag" data-hover>Права людини <span>↗</span></a>
+        <a href="#" class="sidebar-tag" data-hover>Гранти і можливості <span>↗</span></a>
+        <a href="#" class="sidebar-tag" data-hover>Освіта і розвиток <span>↗</span></a>
+        <a href="#" class="sidebar-tag" data-hover>Медіапростір <span>↗</span></a>
+        <a href="#" class="sidebar-tag" data-hover>Громадські ініціативи <span>↗</span></a>
+        <a href="#" class="sidebar-tag" data-hover>НГО і фонди <span>↗</span></a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-logo">
+    <svg width="24" height="22" viewBox="0 0 253 231" fill="none">
+      <path d="M86.5557 65.2538C131.952 65.254 168.61 101.363 168.61 145.733C168.61 190.103 131.952 226.214 86.5557 226.214C41.1594 226.214 4.5 190.104 4.5 145.733C4.50018 101.363 41.1595 65.2538 86.5557 65.2538Z" stroke="white" stroke-width="9"/>
+      <path d="M90.8219 2.58978L226.548 196.344" stroke="white" stroke-width="9"/>
+    </svg>
+    <span class="footer-name">медіа дотичне</span>
+  </div>
+  <div class="footer-right">
+    <div>© 2026 ГО «Медіа Дотичне»</div>
+    <div style="margin-top:4px">Львів · ЄДРПОУ 43491858</div>
+  </div>
+</footer>
+
+<script>
+  // ── Cursor ──
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('[data-hover], a, button, input').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+  });
+
+  // ── Date ──
+  const now = new Date();
+  const ukDays = ['неділя','понеділок','вівторок','середа','четвер','пʼятниця','субота'];
+  const ukMonths = ['січня','лютого','березня','квітня','травня','червня','липня','серпня','вересня','жовтня','листопада','грудня'];
+  const dateStr = `${ukDays[now.getDay()]}, ${now.getDate()} ${ukMonths[now.getMonth()]} ${now.getFullYear()}`;
+  document.getElementById('todayDate').textContent = dateStr;
+  document.getElementById('dateStripText').textContent = dateStr;
+
+  // ── Config ──
+  // Proxy via Netlify Function
+
+  function saveConfig() {
+    const dbId = document.getElementById('notionDbId').value.trim();
+    const token = document.getElementById('notionToken').value.trim();
+    if (!dbId || !token) return;
+    localStorage.setItem('notion_db_id', dbId);
+    localStorage.setItem('notion_token', token);
+    loadArticles(dbId, token);
+  }
+
+  // ── Format date ──
+  function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    return `${d.getDate()} ${ukMonths[d.getMonth()]} ${d.getFullYear()}`;
+  }
+
+  // ── Render ──
+  function renderArticles(articles) {
+    if (!articles.length) {
+      showError();
+      return;
+    }
+
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('errorState').style.display = 'none';
+    document.getElementById('articlesContainer').style.display = 'block';
+    document.getElementById('articlesCount').textContent = `${articles.length} матеріалів`;
+
+    const [hero, ...rest] = articles;
+    const secondary = rest.slice(0, 3);
+    const listItems = rest.slice(3);
+
+    // Hero
+    document.getElementById('heroArticle').innerHTML = `
+      <div class="hero-article-content">
+        <div>
+          <div class="article-category">${hero.category || 'Матеріал'}</div>
+          <a href="${hero.url || '#'}" class="hero-article-title">${hero.title}</a>
+          <p class="hero-article-excerpt">${hero.excerpt || ''}</p>
+        </div>
+        <div class="article-meta">
+          <span class="article-author">${hero.author || 'Редакція'}</span>
+          <span class="article-date">${formatDate(hero.date)}</span>
+        </div>
+      </div>
+      <div class="hero-article-image">
+        ${hero.cover
+          ? `<img src="${hero.cover}" alt="${hero.title}">`
+          : `<div class="hero-image-placeholder">
+              <svg width="60" height="55" viewBox="0 0 253 231" fill="none" opacity="0.15">
+                <path d="M86.5557 65.2538C131.952 65.254 168.61 101.363 168.61 145.733C168.61 190.103 131.952 226.214 86.5557 226.214C41.1594 226.214 4.5 190.104 4.5 145.733C4.50018 101.363 41.1595 65.2538 86.5557 65.2538Z" stroke="white" stroke-width="9"/>
+                <path d="M90.8219 2.58978L226.548 196.344" stroke="white" stroke-width="9"/>
+              </svg>
+            </div>`}
+      </div>`;
+
+    // Secondary
+    document.getElementById('secondaryGrid').innerHTML = secondary.map((a, i) => `
+      <a href="${a.url || '#'}" class="secondary-article">
+        <div class="secondary-article-num">0${i + 2}</div>
+        <div class="secondary-article-title">${a.title}</div>
+        <div class="secondary-article-meta">
+          <span class="article-category" style="margin:0">${a.category || ''}</span>
+          <span class="article-date">${formatDate(a.date)}</span>
+        </div>
+      </a>`).join('');
+
+    // List
+    document.getElementById('listMain').innerHTML = listItems.map(a => `
+      <a href="${a.url || '#'}" class="list-article">
+        <div>
+          <div class="list-article-category">${a.category || ''}</div>
+          <div class="list-article-title">${a.title}</div>
+          <div class="list-article-excerpt">${a.excerpt || ''}</div>
+        </div>
+        <div class="list-article-date">${formatDate(a.date)}</div>
+      </a>`).join('');
+  }
+
+  // ── Parse Notion response ──
+  function parseNotion(data) {
+    return (data.results || [])
+      .filter(p => p.properties?.Published?.checkbox)
+      .map(p => {
+        // Notion page ID — remove dashes for URL, keep original for API calls
+        const rawId = p.id; // e.g. "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+        return {
+          title: p.properties?.Title?.title?.[0]?.plain_text || p.properties?.Name?.title?.[0]?.plain_text || 'Без назви',
+          excerpt: p.properties?.Excerpt?.rich_text?.[0]?.plain_text || '',
+          category: p.properties?.Category?.select?.name || '',
+          author: p.properties?.Author?.rich_text?.[0]?.plain_text || '',
+          date: p.properties?.Date?.date?.start || '',
+          cover: p.cover?.external?.url || p.cover?.file?.url || '',
+          url: `article.html?id=${rawId}`,
+        };
+      });
+  }
+
+  // ── Load from Notion ──
+  async function loadArticles() {
+    document.getElementById('loadingState').style.display = 'flex';
+    document.getElementById('errorState').style.display = 'none';
+
+    try {
+      const res = await fetch('/.netlify/functions/notion', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      });
+
+      if (!res.ok) throw new Error('Notion API error');
+      const data = await res.json();
+      const articles = parseNotion(data);
+      if (articles.length) {
+        renderArticles(articles);
+      } else {
+        showDemoWithNotice();
+      }
+    } catch (e) {
+      // CORS issue — show demo + instruction
+      showDemoWithNotice();
+    }
+  }
+
+  function showError() {
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('errorState').style.display = 'block';
+  }
+
+  // ── Demo articles (shown before Notion is configured) ──
+  const DEMO_ARTICLES = [
+    {
+      title: 'Гранти для медіа у 2026: хто фінансує незалежну журналістику після USAID',
+      excerpt: 'European Endowment for Democracy, Internews, медіафонди ЄС та українські донори — розбираємо хто і на яких умовах підтримує медіапроєкти сьогодні.',
+      category: 'Гранти',
+      author: 'Редакція',
+      date: '2026-03-25',
+      cover: '',
+      url: '#',
+    },
+    {
+      title: 'Свобода слова під час війни: де межа між безпекою і цензурою',
+      excerpt: 'Аналізуємо українське законодавство і міжнародні стандарти — що можна публікувати, а що є реальною загрозою безпеці.',
+      category: 'Права людини',
+      author: 'Яна Кульгавець',
+      date: '2026-03-20',
+      cover: '',
+      url: '#',
+    },
+    {
+      title: '10 освітніх програм для молоді, дедлайн яких у квітні',
+      excerpt: 'Зібрали найкращі стипендії та програми навчання за кордоном і в Україні — з дедлайнами, вимогами і посиланнями.',
+      category: 'Освіта',
+      author: 'Редакція',
+      date: '2026-03-18',
+      cover: '',
+      url: '#',
+    },
+    {
+      title: 'Дезінформація у воєнний час: як розпізнати маніпуляцію',
+      excerpt: 'Практичні поради від медіаексперток — які прийоми використовує ворожа пропаганда і як їх виявляти.',
+      category: 'Медіапростір',
+      author: 'Катерина Гавриш',
+      date: '2026-03-15',
+      cover: '',
+      url: '#',
+    },
+    {
+      title: 'НГО і держава: як побудувати партнерство без втрати незалежності',
+      excerpt: 'Досвід українських організацій, які знайшли баланс між співпрацею з владою і збереженням власної позиції.',
+      category: 'НГО',
+      author: 'Редакція',
+      date: '2026-03-10',
+      cover: '',
+      url: '#',
+    },
+    {
+      title: 'Доступ до публічної інформації: як подати запит і не отримати відмову',
+      excerpt: 'Розбираємо типові помилки при зверненнях до органів влади і показуємо як правильно формулювати запити.',
+      category: 'Права людини',
+      author: 'Яна Кульгавець',
+      date: '2026-03-05',
+      cover: '',
+      url: '#',
+    },
+    {
+      title: 'Як громадська організація може заснувати медіа: юридичний гайд',
+      excerpt: 'Пояснюємо статутні можливості ГО, реєстрацію медіа і практичні кроки — на прикладі реального досвіду.',
+      category: 'НГО',
+      author: 'Редакція',
+      date: '2026-03-01',
+      cover: '',
+      url: '#',
+    },
+  ];
+
+  function showDemoWithNotice() {
+    renderArticles(DEMO_ARTICLES);
+    // Add demo banner
+    const banner = document.createElement('div');
+    banner.style.cssText = 'background:rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.1);padding:12px 48px;font-size:12px;color:rgba(255,255,255,0.4);letter-spacing:0.06em;display:flex;justify-content:space-between;align-items:center;';
+    banner.innerHTML = `<span>Демо-режим — статті не з Notion</span><button onclick="document.getElementById('notionDbId').scrollIntoView({behavior:'smooth'}); showError();" style="background:none;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);font-family:Jost,sans-serif;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 14px;cursor:pointer;">Підключити Notion →</button>`;
+    document.querySelector('.articles-container').prepend(banner);
+  }
+
+  // ── Category filter ──
+  document.querySelectorAll('.cat-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const cat = btn.dataset.cat;
+      const filtered = cat === 'all'
+        ? DEMO_ARTICLES
+        : DEMO_ARTICLES.filter(a => a.category.toLowerCase().includes(cat));
+      renderArticles(filtered.length ? filtered : DEMO_ARTICLES);
+    });
+  });
+
+  // ── Init ──
+  // Load from server env vars (no token needed from user)
+  loadArticles();
+</script>
+</body>
+</html>

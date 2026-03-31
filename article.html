@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Стаття — Медіа Дотичне</title>
+<link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #000000;
+    --white: #ffffff;
+    --gray: #888;
+    --border: rgba(255,255,255,0.1);
+    --text: rgba(255,255,255,0.85);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--black);
+    color: var(--white);
+    cursor: none;
+    overflow-x: hidden;
+  }
+
+  /* CURSOR */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--white);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor.hovering { width: 40px; height: 40px; }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--black);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--white);
+  }
+
+  .nav-logo-text {
+    font-family: 'Jost', sans-serif;
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .nav-back {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .nav-back:hover { color: var(--white); }
+
+  .nav-back svg { transition: transform 0.2s ease; }
+  .nav-back:hover svg { transform: translateX(-4px); }
+
+  /* LOADING */
+  .loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    gap: 20px;
+  }
+
+  .loading-symbol {
+    width: 48px; height: 44px;
+    animation: spin 2s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .loading-text {
+    font-size: 13px;
+    color: var(--gray);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 300;
+  }
+
+  /* ARTICLE */
+  article {
+    display: none;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 140px 48px 120px;
+  }
+
+  /* HEADER */
+  .article-header {
+    margin-bottom: 64px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .article-category {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray);
+    font-weight: 500;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .article-category::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--gray);
+  }
+
+  .article-title {
+    font-size: clamp(32px, 5vw, 64px);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 28px;
+  }
+
+  .article-excerpt {
+    font-size: 18px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.7;
+    margin-bottom: 40px;
+    font-style: italic;
+  }
+
+  .article-meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .article-author-block {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .author-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray);
+    background: rgba(255,255,255,0.05);
+    flex-shrink: 0;
+  }
+
+  .author-name {
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+  }
+
+  .author-date {
+    font-size: 12px;
+    color: var(--gray);
+    font-weight: 300;
+    margin-top: 2px;
+  }
+
+  .article-read-time {
+    font-size: 12px;
+    color: var(--gray);
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+  }
+
+  /* COVER IMAGE */
+  .article-cover {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    margin-bottom: 64px;
+    opacity: 0.85;
+  }
+
+  /* CONTENT */
+  .article-content {
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 1.85;
+    color: var(--text);
+    letter-spacing: 0.01em;
+  }
+
+  .article-content p {
+    margin-bottom: 28px;
+  }
+
+  .article-content h2 {
+    font-size: 26px;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--white);
+    margin: 56px 0 20px;
+  }
+
+  .article-content h3 {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--white);
+    margin: 40px 0 16px;
+  }
+
+  .article-content strong {
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .article-content em {
+    font-style: italic;
+    color: rgba(255,255,255,0.65);
+  }
+
+  .article-content a {
+    color: var(--white);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: rgba(255,255,255,0.3);
+    transition: text-decoration-color 0.2s ease;
+  }
+
+  .article-content a:hover {
+    text-decoration-color: var(--white);
+  }
+
+  .article-content blockquote {
+    border-left: 2px solid rgba(255,255,255,0.3);
+    padding: 4px 0 4px 28px;
+    margin: 40px 0;
+    font-size: 20px;
+    font-style: italic;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.6;
+  }
+
+  .article-content ul, .article-content ol {
+    margin: 20px 0 28px 24px;
+  }
+
+  .article-content li {
+    margin-bottom: 10px;
+    line-height: 1.7;
+  }
+
+  .article-content code {
+    background: rgba(255,255,255,0.08);
+    padding: 2px 8px;
+    font-size: 14px;
+    border-radius: 2px;
+    font-family: monospace;
+  }
+
+  .article-content hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 56px 0;
+  }
+
+  /* CALLOUT */
+  .notion-callout {
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin: 32px 0;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    background: rgba(255,255,255,0.03);
+  }
+
+  .notion-callout-icon { font-size: 20px; flex-shrink: 0; }
+  .notion-callout-text { font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.75); }
+
+  /* FOOTER */
+  .article-footer {
+    margin-top: 80px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .article-tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .article-tag {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    font-weight: 400;
+    text-decoration: none;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .article-tag:hover {
+    color: var(--white);
+    border-color: rgba(255,255,255,0.3);
+  }
+
+  .share-btn {
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--white);
+    background: none;
+    border: 1px solid var(--border);
+    padding: 10px 20px;
+    cursor: none;
+    transition: background 0.2s, border-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .share-btn:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.3);
+  }
+
+  /* RELATED */
+  .related-section {
+    display: none;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 48px 80px;
+  }
+
+  .related-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gray);
+    font-weight: 500;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .related-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .related-item {
+    background: var(--black);
+    padding: 28px 32px;
+    text-decoration: none;
+    color: var(--white);
+    transition: background 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .related-item:hover { background: rgba(255,255,255,0.03); }
+
+  .related-cat {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gray);
+    font-weight: 500;
+  }
+
+  .related-title {
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
+  .related-date {
+    font-size: 12px;
+    color: var(--gray);
+    font-weight: 300;
+    margin-top: auto;
+  }
+
+  /* PAGE FOOTER */
+  footer {
+    padding: 40px 48px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-logo { display: flex; align-items: center; gap: 12px; }
+  .footer-name { font-size: 14px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
+  .footer-right { font-size: 12px; color: var(--gray); font-weight: 300; text-align: right; }
+
+  /* NOT FOUND */
+  .not-found {
+    display: none !important;
+    text-align: center;
+    padding: 160px 48px 80px;
+  }
+
+  .not-found h2 { font-size: 32px; font-weight: 300; margin-bottom: 16px; }
+  .not-found p { font-size: 15px; color: var(--gray); margin-bottom: 32px; }
+  .not-found a {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none;
+    border: 1px solid var(--border);
+    padding: 14px 28px;
+    transition: background 0.2s;
+  }
+  .not-found a:hover { background: rgba(255,255,255,0.06); }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    article { padding: 100px 20px 80px; }
+    .related-section { padding: 0 20px 60px; }
+    .related-grid { grid-template-columns: 1fr; }
+    footer { padding: 28px 20px; flex-direction: column; gap: 16px; align-items: flex-start; }
+    .article-meta-row { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<nav>
+  <a href="index.html" class="nav-logo" data-hover>
+    <svg width="26" height="24" viewBox="0 0 253 231" fill="none">
+      <path d="M86.5557 65.2538C131.952 65.254 168.61 101.363 168.61 145.733C168.61 190.103 131.952 226.214 86.5557 226.214C41.1594 226.214 4.5 190.104 4.5 145.733C4.50018 101.363 41.1595 65.2538 86.5557 65.2538Z" stroke="white" stroke-width="9"/>
+      <path d="M90.8219 2.58978L226.548 196.344" stroke="white" stroke-width="9"/>
+    </svg>
+    <span class="nav-logo-text">медіа дотичне</span>
+  </a>
+  <a href="articles.html" class="nav-back" data-hover>
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path d="M10 3L5 8L10 13" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Всі статті
+  </a>
+</nav>
+
+<!-- LOADING -->
+<div class="loading-state" id="loadingState">
+  <svg class="loading-symbol" viewBox="0 0 253 231" fill="none">
+    <path d="M86.5557 65.2538C131.952 65.254 168.61 101.363 168.61 145.733C168.61 190.103 131.952 226.214 86.5557 226.214C41.1594 226.214 4.5 190.104 4.5 145.733C4.50018 101.363 41.1595 65.2538 86.5557 65.2538Z" stroke="white" stroke-width="6"/>
+    <path d="M90.8219 2.58978L226.548 196.344" stroke="white" stroke-width="6"/>
+  </svg>
+  <span class="loading-text">Завантажуємо статтю…</span>
+</div>
+
+
+
+<!-- NOT FOUND -->
+<div id="notFound" style="display:none; text-align:center; padding:160px 48px 80px;">
+  <h2 style="font-size:32px; font-weight:300; margin-bottom:16px;">Статтю не знайдено</h2>
+  <p style="font-size:15px; color:#888; margin-bottom:32px;">Можливо, вона була видалена або ще не опублікована.</p>
+  <a href="articles.html" style="display:inline-block;font-size:13px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,0.1);padding:14px 28px;">← Повернутись до статей</a>
+</div>
+<article id="articleEl">
+  <header class="article-header">
+    <div class="article-category" id="articleCategory"></div>
+    <h1 class="article-title" id="articleTitle"></h1>
+    <p class="article-excerpt" id="articleExcerpt"></p>
+    <div class="article-meta-row">
+      <div class="article-author-block">
+        <div class="author-avatar" id="authorAvatar"></div>
+        <div>
+          <div class="author-name" id="authorName"></div>
+          <div class="author-date" id="authorDate"></div>
+        </div>
+      </div>
+      <div class="article-read-time" id="readTime"></div>
+    </div>
+  </header>
+
+  <img class="article-cover" id="articleCover" style="display:none" alt="">
+
+  <div class="article-content" id="articleContent"></div>
+
+  <footer class="article-footer">
+    <div class="article-tags" id="articleTags"></div>
+    <button class="share-btn" onclick="shareArticle()" data-hover>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <circle cx="11" cy="2.5" r="1.5" stroke="white" stroke-width="1.2"/>
+        <circle cx="11" cy="11.5" r="1.5" stroke="white" stroke-width="1.2"/>
+        <circle cx="3" cy="7" r="1.5" stroke="white" stroke-width="1.2"/>
+        <path d="M4.5 6.2L9.5 3.3M4.5 7.8L9.5 10.7" stroke="white" stroke-width="1.2"/>
+      </svg>
+      Поділитись
+    </button>
+  </footer>
+</article>
+
+<!-- RELATED -->
+<section class="related-section" id="relatedSection">
+  <div class="related-label">Читайте також</div>
+  <div class="related-grid" id="relatedGrid"></div>
+</section>
+
+<footer>
+  <div class="footer-logo">
+    <svg width="24" height="22" viewBox="0 0 253 231" fill="none">
+      <path d="M86.5557 65.2538C131.952 65.254 168.61 101.363 168.61 145.733C168.61 190.103 131.952 226.214 86.5557 226.214C41.1594 226.214 4.5 190.104 4.5 145.733C4.50018 101.363 41.1595 65.2538 86.5557 65.2538Z" stroke="white" stroke-width="9"/>
+      <path d="M90.8219 2.58978L226.548 196.344" stroke="white" stroke-width="9"/>
+    </svg>
+    <span class="footer-name">медіа дотичне</span>
+  </div>
+  <div class="footer-right">
+    <div>© 2026 ГО «Медіа Дотичне»</div>
+    <div style="margin-top:4px">Львів · ЄДРПОУ 43491858</div>
+  </div>
+</footer>
+
+<script>
+  // ── Cursor ──
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('[data-hover], a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+  });
+
+  // ── Helpers ──
+  const ukMonths = ['січня','лютого','березня','квітня','травня','червня','липня','серпня','вересня','жовтня','листопада','грудня'];
+
+  function formatDate(str) {
+    if (!str) return '';
+    const d = new Date(str);
+    return `${d.getDate()} ${ukMonths[d.getMonth()]} ${d.getFullYear()}`;
+  }
+
+  function readingTime(text) {
+    const words = text.trim().split(/\s+/).length;
+    const mins = Math.max(1, Math.round(words / 200));
+    return `${mins} хв читання`;
+  }
+
+  function initials(name) {
+    if (!name) return '?';
+    return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+  }
+
+  // ── Parse Notion blocks to HTML ──
+  function blocksToHtml(blocks) {
+    let html = '';
+    for (const block of blocks) {
+      const type = block.type;
+      const rich = block[type]?.rich_text || [];
+      const text = richToHtml(rich);
+
+      switch (type) {
+        case 'paragraph':
+          if (text) html += `<p>${text}</p>`;
+          break;
+        case 'heading_1':
+          html += `<h2>${text}</h2>`;
+          break;
+        case 'heading_2':
+          html += `<h2>${text}</h2>`;
+          break;
+        case 'heading_3':
+          html += `<h3>${text}</h3>`;
+          break;
+        case 'bulleted_list_item':
+          html += `<ul><li>${text}</li></ul>`;
+          break;
+        case 'numbered_list_item':
+          html += `<ol><li>${text}</li></ol>`;
+          break;
+        case 'quote':
+          html += `<blockquote>${text}</blockquote>`;
+          break;
+        case 'divider':
+          html += `<hr>`;
+          break;
+        case 'callout': {
+          const icon = block.callout?.icon?.emoji || '💡';
+          html += `<div class="notion-callout"><span class="notion-callout-icon">${icon}</span><div class="notion-callout-text">${text}</div></div>`;
+          break;
+        }
+        case 'image': {
+          const src = block.image?.external?.url || block.image?.file?.url || '';
+          const cap = block.image?.caption?.[0]?.plain_text || '';
+          if (src) html += `<figure style="margin:40px 0"><img src="${src}" alt="${cap}" style="width:100%;opacity:0.85"><figcaption style="font-size:12px;color:var(--gray);margin-top:10px;letter-spacing:0.04em">${cap}</figcaption></figure>`;
+          break;
+        }
+      }
+    }
+    // Merge consecutive ul/ol
+    html = html.replace(/<\/ul>\s*<ul>/g, '').replace(/<\/ol>\s*<ol>/g, '');
+    return html;
+  }
+
+  function richToHtml(rich) {
+    return rich.map(r => {
+      let t = r.plain_text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+      if (r.annotations?.bold) t = `<strong>${t}</strong>`;
+      if (r.annotations?.italic) t = `<em>${t}</em>`;
+      if (r.annotations?.code) t = `<code>${t}</code>`;
+      if (r.href) t = `<a href="${r.href}" target="_blank" rel="noopener">${t}</a>`;
+      return t;
+    }).join('');
+  }
+
+  // ── Load article ──
+  async function loadArticle() {
+    const params = new URLSearchParams(window.location.search);
+    const pageId = params.get('id');
+
+    if (!pageId) {
+      showNotFound();
+      return;
+    }
+
+    // Give Notion 8 seconds before showing error
+    const timeout = setTimeout(() => {
+      if (document.getElementById('loadingState').style.display !== 'none') {
+        showNotFound();
+      }
+    }, 8000);
+
+    try {
+      // Load page properties (token from server env vars)
+      const [pageRes, blocksRes] = await Promise.all([
+        fetch('/.netlify/functions/notion-page', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pageId }),
+        }),
+        fetch('/.netlify/functions/notion-blocks', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pageId }),
+        }),
+      ]);
+
+      clearTimeout(timeout);
+
+      const page = await pageRes.json();
+      const blocksData = await blocksRes.json();
+
+      if (page.error || !page.properties) { showNotFound(); return; }
+
+      const p = page.properties;
+      const title = p?.Title?.title?.[0]?.plain_text || p?.Name?.title?.[0]?.plain_text || 'Без назви';
+      const excerpt = p?.Excerpt?.rich_text?.[0]?.plain_text || '';
+      const category = p?.Category?.select?.name || '';
+      const author = p?.Author?.rich_text?.[0]?.plain_text || 'Редакція';
+      const date = p?.Date?.date?.start || '';
+      const cover = page.cover?.external?.url || page.cover?.file?.url || '';
+
+      // Content from blocks
+      const blocks = blocksData.results || [];
+      const contentHtml = blocksToHtml(blocks);
+      const plainText = blocks.map(b => (b[b.type]?.rich_text || []).map(r => r.plain_text).join('')).join(' ');
+
+      // Render
+      document.title = `${title} — Медіа Дотичне`;
+      document.getElementById('articleCategory').textContent = category;
+      document.getElementById('articleTitle').textContent = title;
+      document.getElementById('articleExcerpt').textContent = excerpt;
+      document.getElementById('authorAvatar').textContent = initials(author);
+      document.getElementById('authorName').textContent = author;
+      document.getElementById('authorDate').textContent = formatDate(date);
+      document.getElementById('readTime').textContent = readingTime(plainText || excerpt);
+      document.getElementById('articleContent').innerHTML = contentHtml || `<p style="color:var(--gray);font-style:italic">Текст статті ще не додано. Заповни поле Content у Notion.</p>`;
+
+      if (cover) {
+        const img = document.getElementById('articleCover');
+        img.src = cover;
+        img.style.display = 'block';
+      }
+
+      if (category) {
+        document.getElementById('articleTags').innerHTML = `<a href="articles.html" class="article-tag">${category}</a>`;
+      }
+
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('notFound').style.display = 'none';
+      document.getElementById('articleEl').style.display = 'block';
+      document.getElementById('relatedSection').style.display = 'block';
+
+      // Load related
+      loadRelated(pageId, category);
+
+    } catch (e) {
+      clearTimeout(timeout);
+      showNotFound();
+    }
+  }
+
+  async function loadRelated(currentId, category) {
+    try {
+      const res = await fetch('/.netlify/functions/notion', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      });
+      const data = await res.json();
+      const related = (data.results || [])
+        .filter(p => p.id !== currentId && p.properties?.Published?.checkbox)
+        .slice(0, 4);
+
+      if (!related.length) {
+        document.getElementById('relatedSection').style.display = 'none';
+        return;
+      }
+
+      document.getElementById('relatedGrid').innerHTML = related.map(p => {
+        const t = p.properties?.Title?.title?.[0]?.plain_text || p.properties?.Name?.title?.[0]?.plain_text || 'Без назви';
+        const cat = p.properties?.Category?.select?.name || '';
+        const d = p.properties?.Date?.date?.start || '';
+        return `<a href="article.html?id=${p.id}" class="related-item">
+          <div class="related-cat">${cat}</div>
+          <div class="related-title">${t}</div>
+          <div class="related-date">${formatDate(d)}</div>
+        </a>`;
+      }).join('');
+
+    } catch (e) { /* silent */ }
+  }
+
+  function showNotFound() {
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('notFound').style.display = 'block';
+  }
+
+  function shareArticle() {
+    if (navigator.share) {
+      navigator.share({ title: document.title, url: window.location.href });
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      const btn = document.querySelector('.share-btn');
+      btn.textContent = '✓ Скопійовано';
+      setTimeout(() => btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="11" cy="2.5" r="1.5" stroke="white" stroke-width="1.2"/><circle cx="11" cy="11.5" r="1.5" stroke="white" stroke-width="1.2"/><circle cx="3" cy="7" r="1.5" stroke="white" stroke-width="1.2"/><path d="M4.5 6.2L9.5 3.3M4.5 7.8L9.5 10.7" stroke="white" stroke-width="1.2"/></svg> Поділитись`, 2000);
+    }
+  }
+
+  loadArticle();
+</script>
+</body>
+</html>
