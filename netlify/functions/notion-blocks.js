@@ -7,29 +7,20 @@ exports.handler = async function(event) {
 
   if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' };
 
-  // Use env vars first, fall back to body params
   const body = JSON.parse(event.body || '{}');
   const token = process.env.NOTION_TOKEN || body.token;
-  const dbId = process.env.NOTION_DB_ID || body.dbId;
+  const pageId = body.pageId;
 
-  if (!dbId || !token) {
-    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing dbId or token' }) };
-  }
+  if (!pageId || !token) return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing params' }) };
 
   try {
-    const response = await fetch(`https://api.notion.com/v1/databases/${dbId}/query`, {
-      method: 'POST',
+    const res = await fetch(`https://api.notion.com/v1/blocks/${pageId}/children?page_size=100`, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Notion-Version': '2022-06-28',
-        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        sorts: [{ property: 'Date', direction: 'descending' }],
-      }),
     });
-
-    const data = await response.json();
+    const data = await res.json();
     return { statusCode: 200, headers, body: JSON.stringify(data) };
   } catch (err) {
     return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };
