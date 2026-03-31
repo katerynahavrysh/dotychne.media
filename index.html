@@ -39,7 +39,6 @@
   }
   .cursor.hovering { width: 40px; height: 40px; }
 
-  /* NAV — затемнення при скролі */
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -100,7 +99,6 @@
 
   .nav-links a:hover::after { width: 100%; }
 
-  /* HERO */
   .hero {
     height: 100vh;
     display: flex;
@@ -111,7 +109,6 @@
     overflow: hidden;
   }
 
-  /* Кружок зміщено вправо */
   .hero-bg-logo {
     position: absolute;
     top: 50%;
@@ -294,10 +291,8 @@
   }
 
   .value-title { font-size: 20px; font-weight: 500; margin-bottom: 12px; letter-spacing: -0.01em; }
-
   .value-desc { font-size: 14px; color: rgba(255,255,255,0.5); font-weight: 300; line-height: 1.6; }
 
-  /* TOPICS */
   .topics-section {
     padding: 120px 48px;
     background: var(--white);
@@ -322,9 +317,7 @@
   .topic-item:first-child { border-top: 1px solid rgba(0,0,0,0.1); }
 
   .topic-name { font-size: clamp(22px, 3vw, 40px); font-weight: 400; letter-spacing: -0.01em; }
-
   .topic-meta { display: flex; align-items: center; gap: 24px; }
-
   .topic-tag { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(0,0,0,0.4); }
 
   .topic-arrow {
@@ -335,12 +328,12 @@
     align-items: center;
     justify-content: center;
     transition: background 0.3s ease, border-color 0.3s ease;
+    flex-shrink: 0;
   }
 
   .topic-item:hover .topic-arrow { background: var(--black); border-color: var(--black); }
   .topic-item:hover .topic-arrow svg path { stroke: var(--white); }
 
-  /* NEWSLETTER */
   .newsletter-section {
     padding: 120px 48px;
     display: grid;
@@ -358,7 +351,6 @@
   }
 
   .newsletter-left p { font-size: 15px; color: var(--gray); font-weight: 300; line-height: 1.7; }
-
   .newsletter-form { display: flex; flex-direction: column; gap: 16px; }
 
   .form-row {
@@ -400,17 +392,17 @@
   }
 
   .form-row button:hover { background: var(--light-gray); }
-
   .form-note { font-size: 12px; color: rgba(255,255,255,0.3); font-weight: 300; letter-spacing: 0.04em; }
 
-  /* SOCIAL STRIP */
   .social-strip {
     border-top: 1px solid rgba(255,255,255,0.1);
     border-bottom: 1px solid rgba(255,255,255,0.1);
     padding: 0 48px;
     display: flex;
-    overflow: hidden;
+    overflow-x: auto;
+    scrollbar-width: none;
   }
+  .social-strip::-webkit-scrollbar { display: none; }
 
   .social-item {
     display: flex;
@@ -432,7 +424,6 @@
   .social-name { font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
   .social-handle { font-size: 12px; color: var(--gray); font-weight: 300; }
 
-  /* FOOTER */
   footer {
     padding: 60px 48px;
     display: flex;
@@ -466,7 +457,7 @@
     nav { padding: 24px 24px; }
     .nav-links { display: none; }
     .hero { padding: 0 24px 48px; }
-    .hero-bg-logo { width: 90vw; left: 5%; }
+    .hero-bg-logo { width: 90vw; right: -10%; }
     .hero-bottom { flex-direction: column; align-items: flex-start; gap: 32px; }
     .section { padding: 80px 24px; }
     .about-grid { grid-template-columns: 1fr; gap: 48px; }
@@ -475,10 +466,9 @@
     .topic-tag { font-size: 8px; letter-spacing: 0.08em; }
     .topic-meta { gap: 12px; }
     .newsletter-section { padding: 80px 24px; grid-template-columns: 1fr; gap: 48px; }
-    .social-strip { padding: 0 24px; overflow-x: auto; }
+    .social-strip { padding: 0 24px; }
     .social-item { padding: 20px 24px; }
     footer { padding: 40px 24px; flex-direction: column; gap: 24px; align-items: flex-start; }
-    .scroll-line { left: 24px; }
     .hero-cta { flex-direction: column; gap: 12px; }
   }
 </style>
@@ -526,8 +516,6 @@
       <a href="#newsletter" class="btn btn-ghost" data-cursor><span>Підписатись</span></a>
     </div>
   </div>
-
-  <div class="scroll-line"></div>
 </section>
 
 <div class="divider"></div>
@@ -655,13 +643,43 @@
       <div class="social-handle">@media.dotychne</div>
     </div>
   </a>
-  <a href="#" class="social-item" data-cursor style="padding-left: 40px;">
+  <a href="https://t.me/media_dotychne" target="_blank" class="social-item" data-cursor>
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
       <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13"/>
     </svg>
     <div>
       <div class="social-name">Telegram</div>
-      <div class="social-handle">Скоро</div>
+      <div class="social-handle">@media_dotychne</div>
+    </div>
+  </a>
+  <a href="https://www.threads.net/@media.dotychne" target="_blank" class="social-item" data-cursor>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+      <path d="M8 12c0-2.21 1.79-4 4-4s4 1.79 4 4-1.79 4-4 4"/>
+      <path d="M12 8v1M12 15v1"/>
+    </svg>
+    <div>
+      <div class="social-name">Threads</div>
+      <div class="social-handle">@media.dotychne</div>
+    </div>
+  </a>
+  <a href="https://www.tiktok.com/@media.dotychne" target="_blank" class="social-item" data-cursor>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/>
+    </svg>
+    <div>
+      <div class="social-name">TikTok</div>
+      <div class="social-handle">@media.dotychne</div>
+    </div>
+  </a>
+  <a href="mailto:media.dotychne@gmail.com" class="social-item" data-cursor>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="2" y="4" width="20" height="16" rx="2"/>
+      <path d="M2 7l10 7 10-7"/>
+    </svg>
+    <div>
+      <div class="social-name">Email</div>
+      <div class="social-handle">media.dotychne@gmail.com</div>
     </div>
   </a>
 </div>
@@ -710,13 +728,11 @@
     }
   });
 
-  // Затемнення навбару при скролі
   const nav = document.getElementById('mainNav');
   window.addEventListener('scroll', () => {
     nav.classList.toggle('scrolled', window.scrollY > 60);
   });
 
-  // Warmup
   setTimeout(() => {
     fetch('/.netlify/functions/notion', {
       method: 'POST',
