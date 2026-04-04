@@ -5,6 +5,14 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Стаття — Медіа Дотичне</title>
+<meta name="description" content="Медіа Дотичне — незалежне українське медіа про права людини, гранти і громадський сектор.">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://dotychne.online/og-image.png">
+<meta property="og:locale" content="uk_UA">
+<meta property="og:site_name" content="Медіа Дотичне">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://dotychne.online/og-image.png">
 <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -739,6 +747,18 @@
 
       // Render
       document.title = `${title} — Медіа Дотичне`;
+      document.querySelector('meta[name="description"]')?.setAttribute('content', excerpt || title);
+      // Update OG tags dynamically
+      const setMeta = (prop, val, attr='property') => {
+        let el = document.querySelector(`meta[${attr}="${prop}"]`);
+        if (!el) { el = document.createElement('meta'); el.setAttribute(attr, prop); document.head.appendChild(el); }
+        el.setAttribute('content', val);
+      };
+      setMeta('og:title', `${title} — Медіа Дотичне`);
+      setMeta('og:description', excerpt || title);
+      setMeta('og:url', window.location.href);
+      setMeta('twitter:title', `${title} — Медіа Дотичне`, 'name');
+      setMeta('twitter:description', excerpt || title, 'name');
       document.getElementById('articleCategory').textContent = category;
       document.getElementById('articleTitle').textContent = title;
       document.getElementById('articleExcerpt').textContent = excerpt;
