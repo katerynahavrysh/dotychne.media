@@ -758,7 +758,7 @@
   // ── Parse Notion response ──
   function parseNotion(data) {
     return (data.results || [])
-      .filter(p => p.properties?.Published?.checkbox)
+      .filter(p => p.properties?.Published?.checkbox !== false)
       .map(p => {
         // Notion page ID — remove dashes for URL, keep original for API calls
         const rawId = p.id; // e.g. "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
