@@ -788,7 +788,11 @@
 
       if (!res.ok) throw new Error('Notion API error');
       const data = await res.json();
+      console.log('Notion response:', JSON.stringify(data).slice(0, 500));
+      console.log('Results count:', data.results?.length);
+      if (data.results?.length) console.log('First result props:', Object.keys(data.results[0].properties || {}));
       let articles = parseNotion(data);
+      console.log('Parsed articles:', articles.length);
       const urlCat = new URLSearchParams(window.location.search).get('cat');
       if (urlCat) {
         const filtered = articles.filter(a => a.category.toLowerCase().includes(urlCat));
