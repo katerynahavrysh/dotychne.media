@@ -608,39 +608,7 @@
   </div>
 
   <!-- ERROR / SETUP -->
-  <div class="error-state" id="errorState">
-    <h2>Підключи Notion</h2>
-    <p>Щоб статті з'явились — введи ID своєї бази даних Notion нижче.<br>Це займе 2 хвилини.</p>
-    <div class="setup-box">
-      <h3>Як налаштувати</h3>
-      <div class="setup-step">
-        <div class="setup-num">1</div>
-        <p>Створи базу даних у Notion з колонками: <code>Title</code>, <code>Excerpt</code>, <code>Category</code>, <code>Author</code>, <code>Date</code>, <code>Published</code> (checkbox)</p>
-      </div>
-      <div class="setup-step">
-        <div class="setup-num">2</div>
-        <p>Зайди на <code>notion.so/my-integrations</code>, створи інтеграцію і скопіюй токен</p>
-      </div>
-      <div class="setup-step">
-        <div class="setup-num">3</div>
-        <p>Відкрий базу даних → «…» → «Add connections» → підключи свою інтеграцію</p>
-      </div>
-      <div class="setup-step">
-        <div class="setup-num">4</div>
-        <p>Скопіюй ID бази з URL: <code>notion.so/workspace/<b>ось-цей-id</b>?v=…</code></p>
-      </div>
-      <div class="config-input-row">
-        <input type="text" id="notionDbId" placeholder="ID бази даних Notion…">
-        <button onclick="saveConfig()" data-hover>Зберегти</button>
-      </div>
-      <div style="margin-top: 12px;">
-        <div class="config-input-row">
-          <input type="text" id="notionToken" placeholder="Notion Integration Token (secret_…)">
-          <button onclick="saveConfig()" data-hover>OK</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="error-state" id="errorState" style="display:none"></div>
 
   <!-- ARTICLES -->
   <div class="articles-container" id="articlesContainer">
@@ -812,7 +780,7 @@
     document.getElementById('errorState').style.display = 'none';
 
     try {
-      const res = await fetch('/.netlify/functions/notion', {
+      const res = await fetch('https://dotychne-notion.kateryna-havrysh.workers.dev', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({}),

@@ -715,12 +715,12 @@
     try {
       // Load page properties (token from server env vars)
       const [pageRes, blocksRes] = await Promise.all([
-        fetch('/.netlify/functions/notion-page', {
+        fetch('https://dotychne-notion-page.kateryna-havrysh.workers.dev', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ pageId }),
         }),
-        fetch('/.netlify/functions/notion-blocks', {
+        fetch('https://dotychne-notion-blocks.kateryna-havrysh.workers.dev', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ pageId }),
@@ -796,7 +796,7 @@
 
   async function loadRelated(currentId, category) {
     try {
-      const res = await fetch('/.netlify/functions/notion', {
+      const res = await fetch('https://dotychne-notion.kateryna-havrysh.workers.dev', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({}),
