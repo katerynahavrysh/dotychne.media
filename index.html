@@ -745,11 +745,39 @@
   }, { threshold: 0.15 });
   reveals.forEach(el => observer.observe(el));
 
-  document.querySelector('.form-row button').addEventListener('click', () => {
+  document.querySelector('.form-row button').addEventListener('click', async () => {
     const input = document.querySelector('.form-row input');
-    if (input.value && input.value.includes('@')) {
-      input.value = '';
-      input.placeholder = '✓ Дякуємо! Ти підписаний(а)';
+    const btn = document.querySelector('.form-row button');
+    const email = input.value.trim();
+
+    if (!email || !email.includes('@')) {
+      input.style.borderColor = 'rgba(255,0,0,0.5)';
+      setTimeout(() => input.style.borderColor = '', 2000);
+      return;
+    }
+
+    btn.textContent = '...';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch('https://dotychne-subscribe.kateryna-havrysh.workers.dev', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        input.value = '';
+        input.placeholder = '✓ Дякуємо! Ти підписаний(а)';
+        btn.textContent = '✓';
+      } else {
+        btn.textContent = 'Помилка';
+        setTimeout(() => { btn.textContent = 'Підписатись'; btn.disabled = false; }, 2000);
+      }
+    } catch (e) {
+      btn.textContent = 'Помилка';
+      setTimeout(() => { btn.textContent = 'Підписатись'; btn.disabled = false; }, 2000);
     }
   });
 
