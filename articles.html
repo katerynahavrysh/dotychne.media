@@ -756,14 +756,18 @@
   }
 
   // ── Parse Notion response ──
+  // Stricter rules: a page is shown only if Published===true AND it has a non-empty Title.
+  // If your DB has no Published column, change `=== true` to `!== false`.
   function parseNotion(data) {
     return (data.results || [])
-      .filter(p => p.properties?.Published?.checkbox !== false)
+      .filter(p => p.properties?.Published?.checkbox === true)
       .map(p => {
-        // Notion page ID — remove dashes for URL, keep original for API calls
-        const rawId = p.id; // e.g. "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+        const rawId = p.id;
+        const title = p.properties?.Title?.title?.[0]?.plain_text
+                   || p.properties?.Name?.title?.[0]?.plain_text
+                   || '';
         return {
-          title: p.properties?.Title?.title?.[0]?.plain_text || p.properties?.Name?.title?.[0]?.plain_text || 'Без назви',
+          title,
           excerpt: p.properties?.Excerpt?.rich_text?.[0]?.plain_text || '',
           category: p.properties?.Category?.select?.name || '',
           author: p.properties?.Author?.rich_text?.[0]?.plain_text || '',
@@ -771,7 +775,8 @@
           cover: p.cover?.external?.url || p.cover?.file?.url || '',
           url: `article.html?id=${rawId}`,
         };
-      });
+      })
+      .filter(a => a.title.trim().length > 0);
   }
 
   // ── Load from Notion ──
@@ -786,25 +791,37 @@
         body: JSON.stringify({}),
       });
 
-      if (!res.ok) throw new Error('Notion API error');
+      console.log('[Notion] HTTP status:', res.status);
+      if (!res.ok) throw new Error('Notion API HTTP ' + res.status);
+
       const data = await res.json();
-      console.log('Notion response:', JSON.stringify(data).slice(0, 500));
-      console.log('Results count:', data.results?.length);
-      if (data.results?.length) console.log('First result props:', Object.keys(data.results[0].properties || {}));
+      const raw = data.results || [];
+      console.log('[Notion] Pages received from API:', raw.length);
+      if (raw.length) {
+        console.log('[Notion] First page properties:', Object.keys(raw[0].properties || {}));
+        console.log('[Notion] Published values:', raw.map(p => p.properties?.Published?.checkbox));
+        console.log('[Notion] Titles:', raw.map(p => p.properties?.Title?.title?.[0]?.plain_text || p.properties?.Name?.title?.[0]?.plain_text || '(no title)'));
+      }
+
       let articles = parseNotion(data);
-      console.log('Parsed articles:', articles.length);
+      console.log('[Notion] After Published filter:', articles.length, 'of', raw.length);
+
       const urlCat = new URLSearchParams(window.location.search).get('cat');
       if (urlCat) {
         const filtered = articles.filter(a => a.category.toLowerCase().includes(urlCat));
         articles = filtered.length ? filtered : articles;
       }
+
       if (articles.length) {
         renderArticles(articles);
       } else {
+        // Real Notion responded but nothing to show — most likely all pages have Published=false
+        // or Title/Date empty. Show demo, but log the reason clearly.
+        console.warn('[Notion] No articles to render. Reason candidates: Published=false on all, empty Title, or empty results. raw=', raw.length);
         showDemoWithNotice();
       }
     } catch (e) {
-      // CORS issue — show demo + instruction
+      console.error('[Notion] Load failed:', e);
       showDemoWithNotice();
     }
   }
