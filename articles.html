@@ -695,7 +695,7 @@
   // ── Render ──
   function renderArticles(articles) {
     if (!articles.length) {
-      showError();
+      showError('Немає матеріалів', 'У цій категорії поки немає опублікованих статей. Оберіть іншу тему або перегляньте всі матеріали.');
       return;
     }
 
@@ -779,6 +779,9 @@
       .filter(a => a.title.trim().length > 0);
   }
 
+  // ── State: real articles loaded from Notion (single source of truth) ──
+  let allArticles = [];
+
   // ── Load from Notion ──
   async function loadArticles() {
     document.getElementById('loadingState').style.display = 'flex';
@@ -803,127 +806,59 @@
         console.log('[Notion] Titles:', raw.map(p => p.properties?.Title?.title?.[0]?.plain_text || p.properties?.Name?.title?.[0]?.plain_text || '(no title)'));
       }
 
-      let articles = parseNotion(data);
-      console.log('[Notion] After Published filter:', articles.length, 'of', raw.length);
+      allArticles = parseNotion(data);
+      console.log('[Notion] After Published filter:', allArticles.length, 'of', raw.length);
 
-      const urlCat = new URLSearchParams(window.location.search).get('cat');
-      if (urlCat) {
-        const filtered = articles.filter(a => a.category.toLowerCase().includes(urlCat));
-        articles = filtered.length ? filtered : articles;
-      }
-
-      if (articles.length) {
-        renderArticles(articles);
-      } else {
-        // Real Notion responded but nothing to show — most likely all pages have Published=false
-        // or Title/Date empty. Show demo, but log the reason clearly.
+      if (!allArticles.length) {
         console.warn('[Notion] No articles to render. Reason candidates: Published=false on all, empty Title, or empty results. raw=', raw.length);
-        showDemoWithNotice();
+        showError(
+          'Немає опублікованих статей',
+          'У базі Notion поки немає жодної статті зі статусом «Опубліковано». Перевірте налаштування бази або спробуйте оновити сторінку пізніше.'
+        );
+        return;
       }
+
+      applyCategoryFilter();
     } catch (e) {
       console.error('[Notion] Load failed:', e);
-      showDemoWithNotice();
+      showError(
+        'Не вдалося завантажити статті',
+        'Сталася помилка при зверненні до Notion API. Перевірте підключення до інтернету і спробуйте оновити сторінку через кілька хвилин.'
+      );
     }
   }
 
-  function showError() {
+  // ── Apply the currently active category (from URL or clicked button) to allArticles ──
+  function applyCategoryFilter(cat) {
+    const activeBtn = document.querySelector('.cat-btn.active');
+    const category = cat !== undefined ? cat : (activeBtn ? activeBtn.dataset.cat : 'all');
+
+    const filtered = (!category || category === 'all')
+      ? allArticles
+      : allArticles.filter(a => a.category.toLowerCase().includes(category.toLowerCase()));
+
+    renderArticles(filtered);
+  }
+
+  function showError(title, text) {
     document.getElementById('loadingState').style.display = 'none';
-    document.getElementById('errorState').style.display = 'block';
+    document.getElementById('articlesContainer').style.display = 'none';
+    const el = document.getElementById('errorState');
+    el.innerHTML = `<h2>${title}</h2><p>${text}</p>`;
+    el.style.display = 'block';
   }
 
-  // ── Demo articles (shown before Notion is configured) ──
-  const DEMO_ARTICLES = [
-    {
-      title: 'Гранти для медіа у 2026: хто фінансує незалежну журналістику після USAID',
-      excerpt: 'European Endowment for Democracy, Internews, медіафонди ЄС та українські донори — розбираємо хто і на яких умовах підтримує медіапроєкти сьогодні.',
-      category: 'Гранти',
-      author: 'Редакція',
-      date: '2026-03-25',
-      cover: '',
-      url: '#',
-    },
-    {
-      title: 'Свобода слова під час війни: де межа між безпекою і цензурою',
-      excerpt: 'Аналізуємо українське законодавство і міжнародні стандарти — що можна публікувати, а що є реальною загрозою безпеці.',
-      category: 'Права людини',
-      author: 'Яна Кульгавець',
-      date: '2026-03-20',
-      cover: '',
-      url: '#',
-    },
-    {
-      title: '10 освітніх програм для молоді, дедлайн яких у квітні',
-      excerpt: 'Зібрали найкращі стипендії та програми навчання за кордоном і в Україні — з дедлайнами, вимогами і посиланнями.',
-      category: 'Освіта',
-      author: 'Редакція',
-      date: '2026-03-18',
-      cover: '',
-      url: '#',
-    },
-    {
-      title: 'Дезінформація у воєнний час: як розпізнати маніпуляцію',
-      excerpt: 'Практичні поради від медіаексперток — які прийоми використовує ворожа пропаганда і як їх виявляти.',
-      category: 'Медіапростір',
-      author: 'Катерина Гавриш',
-      date: '2026-03-15',
-      cover: '',
-      url: '#',
-    },
-    {
-      title: 'НГО і держава: як побудувати партнерство без втрати незалежності',
-      excerpt: 'Досвід українських організацій, які знайшли баланс між співпрацею з владою і збереженням власної позиції.',
-      category: 'НГО',
-      author: 'Редакція',
-      date: '2026-03-10',
-      cover: '',
-      url: '#',
-    },
-    {
-      title: 'Доступ до публічної інформації: як подати запит і не отримати відмову',
-      excerpt: 'Розбираємо типові помилки при зверненнях до органів влади і показуємо як правильно формулювати запити.',
-      category: 'Права людини',
-      author: 'Яна Кульгавець',
-      date: '2026-03-05',
-      cover: '',
-      url: '#',
-    },
-    {
-      title: 'Як громадська організація може заснувати медіа: юридичний гайд',
-      excerpt: 'Пояснюємо статутні можливості ГО, реєстрацію медіа і практичні кроки — на прикладі реального досвіду.',
-      category: 'НГО',
-      author: 'Редакція',
-      date: '2026-03-01',
-      cover: '',
-      url: '#',
-    },
-  ];
-
-  function showDemoWithNotice() {
-    const urlCat = new URLSearchParams(window.location.search).get('cat');
-    const filtered = urlCat
-      ? DEMO_ARTICLES.filter(a => a.category.toLowerCase().includes(urlCat))
-      : DEMO_ARTICLES;
-    renderArticles(filtered.length ? filtered : DEMO_ARTICLES);
-  }
-
-  // ── Category filter ──
+  // ── Category filter (filters the real articles loaded from Notion) ──
   document.querySelectorAll('.cat-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      const cat = btn.dataset.cat;
-      const filtered = cat === 'all'
-        ? DEMO_ARTICLES
-        : DEMO_ARTICLES.filter(a => a.category.toLowerCase().includes(cat));
-      renderArticles(filtered.length ? filtered : DEMO_ARTICLES);
+      applyCategoryFilter(btn.dataset.cat);
     });
   });
 
-  // ── Init ──
-  // Load from server env vars (no token needed from user)
-  loadArticles();
-
-  // ── Activate category from URL param ──
+  // ── Activate category button matching the URL param BEFORE loading,
+  //    so the first render already reflects the correct filter ──
   const urlCat = new URLSearchParams(window.location.search).get('cat');
   if (urlCat) {
     document.querySelectorAll('.cat-btn').forEach(btn => {
@@ -934,6 +869,9 @@
       }
     });
   }
+
+  // ── Init ──
+  loadArticles();
 
   // ── Warmup functions so article pages load faster ──
   setTimeout(() => {
