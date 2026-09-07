@@ -134,6 +134,28 @@
   .cat-btn.active, .cat-btn:hover { color: var(--white); }
   .cat-btn.active::after, .cat-btn:hover::after { width: calc(100% - 20px); }
 
+  .nav-search-row {
+    border-top: 1px solid var(--border);
+    padding: 10px 48px;
+  }
+
+  .search-input {
+    width: 100%;
+    max-width: 420px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    outline: none;
+    padding: 8px 0;
+    font-family: 'Raleway', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px;
+    color: var(--white);
+    font-weight: 300;
+    cursor: text;
+  }
+
+  .search-input::placeholder { color: rgba(255,255,255,0.3); }
+
   /* MAIN CONTENT */
   main {
     padding-top: 110px;
@@ -566,6 +588,7 @@
     .list-article { padding: 20px; grid-template-columns: 1fr; }
     .list-sidebar { display: none; }
     .date-strip { padding: 12px 20px; }
+    .nav-search-row { padding: 10px 20px; }
     footer { padding: 28px 20px; flex-direction: column; gap: 16px; align-items: flex-start; }
     .error-state { padding: 48px 20px; }
   }
@@ -594,6 +617,9 @@
     <button class="cat-btn" data-cat="освіта" data-hover>Освіта</button>
     <button class="cat-btn" data-cat="медіа" data-hover>Медіапростір</button>
     <button class="cat-btn" data-cat="нго" data-hover>НГО</button>
+  </div>
+  <div class="nav-search-row">
+    <input type="text" id="searchInput" class="search-input" placeholder="Пошук за назвою або автором…" data-hover>
   </div>
 </nav>
 
@@ -650,6 +676,10 @@
   <div class="footer-right">
     <div>© 2026 ГО «Медіа Дотичне»</div>
     <div style="margin-top:4px">Львів · ЄДРПОУ 43491858</div>
+    <div style="margin-top:8px; opacity:0.75;">
+      Ідентифікатор медіа в Реєстрі суб'єктів у сфері медіа: R40-07241<br>
+      вул. М. Горіня, 25, оф. 7, м. Львів, 79049 · +380 93 541 82 89 · <a href="mailto:media.dotychne@gmail.com" style="color:inherit;text-decoration:underline;">media.dotychne@gmail.com</a>
+    </div>
   </div>
 </footer>
 
@@ -695,7 +725,11 @@
   // ── Render ──
   function renderArticles(articles) {
     if (!articles.length) {
-      showError('Немає матеріалів', 'У цій категорії поки немає опублікованих статей. Оберіть іншу тему або перегляньте всі матеріали.');
+      if (searchQuery.trim()) {
+        showError('Нічого не знайдено', `За запитом «${searchQuery.trim()}» матеріалів не знайдено. Спробуйте інший запит або скиньте пошук.`);
+      } else {
+        showError('Немає матеріалів', 'У цій категорії поки немає опублікованих статей. Оберіть іншу тему або перегляньте всі матеріали.');
+      }
       return;
     }
 
@@ -828,17 +862,49 @@
     }
   }
 
-  // ── Apply the currently active category (from URL or clicked button) to allArticles ──
+  // ── Current search query (title or author) ──
+  let searchQuery = '';
+
+  // ── Apply the currently active category AND the current search query to allArticles ──
   function applyCategoryFilter(cat) {
     const activeBtn = document.querySelector('.cat-btn.active');
     const category = cat !== undefined ? cat : (activeBtn ? activeBtn.dataset.cat : 'all');
 
-    const filtered = (!category || category === 'all')
+    let filtered = (!category || category === 'all')
       ? allArticles
       : allArticles.filter(a => a.category.toLowerCase().includes(category.toLowerCase()));
 
+    const q = searchQuery.trim().toLowerCase();
+    if (q) {
+      filtered = filtered.filter(a =>
+        (a.title || '').toLowerCase().includes(q) ||
+        (a.author || '').toLowerCase().includes(q)
+      );
+    }
+
     renderArticles(filtered);
   }
+
+  // ── Search input: filter by title or author as the user types ──
+  const searchInput = document.getElementById('searchInput');
+  const urlQuery = new URLSearchParams(window.location.search).get('q');
+  if (urlQuery) {
+    searchQuery = urlQuery;
+    searchInput.value = urlQuery;
+  }
+  let searchDebounce;
+  searchInput.addEventListener('input', (e) => {
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(() => {
+      searchQuery = e.target.value;
+      const params = new URLSearchParams(window.location.search);
+      if (searchQuery.trim()) params.set('q', searchQuery.trim());
+      else params.delete('q');
+      const activeBtn = document.querySelector('.cat-btn.active');
+      history.replaceState(null, '', `${window.location.pathname}?${params.toString()}`);
+      applyCategoryFilter(activeBtn ? activeBtn.dataset.cat : 'all');
+    }, 200);
+  });
 
   function showError(title, text) {
     document.getElementById('loadingState').style.display = 'none';
