@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Про нас — Медіа Дотичне</title>
+<meta name="description" content="Хто ми: ГО «Медіа Дотичне» — незалежне онлайн-медіа зі Львова про можливості для громадського сектору, права людини і свободу слова. Команда, цінності, офіційна інформація і контакти.">
+<meta name="keywords" content="медіа, дотичне, Україна, права людини, гранти, громадський сектор, Львів, незалежне медіа">
+<meta name="author" content="ГО Медіа Дотичне">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://dotychne.online/about.html">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dotychne.online/about.html">
+<meta property="og:title" content="Про нас — Медіа Дотичне">
+<meta property="og:description" content="Незалежне українське медіа про можливості для громадського сектору, права людини і свободу слова.">
+<meta property="og:image" content="https://dotychne.online/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="uk_UA">
+<meta property="og:site_name" content="Медіа Дотичне">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Про нас — Медіа Дотичне">
+<meta name="twitter:description" content="Незалежне українське медіа про можливості для громадського сектору, права людини і свободу слова.">
+<meta name="twitter:image" content="https://dotychne.online/og-image.png">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #000000;
+    --white: #ffffff;
+    --gray: #888888;
+    --light-gray: #e8e8e8;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Raleway', 'Helvetica Neue', Arial, sans-serif;
+    background: var(--black);
+    color: var(--white);
+    cursor: none;
+    overflow-x: hidden;
+  }
+
+  .cursor {
+    position: fixed;
+    width: 12px;
+    height: 12px;
+    background: var(--white);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor.hovering { width: 40px; height: 40px; }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 28px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s ease, backdrop-filter 0.3s ease;
+  }
+
+  nav.scrolled {
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--white);
+  }
+
+  .nav-logo svg { width: 26px; height: 24px; flex-shrink: 0; }
+
+  .nav-logo-text {
+    font-family: 'Raleway', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+
+  .nav-links a {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    position: relative;
+    padding-bottom: 2px;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 1px;
+    background: var(--white);
+    transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover::after { width: 100%; }
+
+  .hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 48px 64px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg-logo {
+    position: absolute;
+    top: 50%;
+    right: 5%;
+    left: auto;
+    transform: translateY(-50%);
+    width: 55vw;
+    max-width: 650px;
+    opacity: 0.05;
+    pointer-events: none;
+    animation: slowRotate 30s linear infinite;
+  }
+
+  @keyframes slowRotate {
+    from { transform: translateY(-50%) rotate(0deg); }
+    to { transform: translateY(-50%) rotate(360deg); }
+  }
+
+  .hero-tag {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.3s;
+  }
+
+  .hero-title {
+    font-size: clamp(52px, 8vw, 120px);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    overflow: hidden;
+  }
+
+  .hero-title .line {
+    display: block;
+    opacity: 0;
+    transform: translateY(100%);
+    animation: slideUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .hero-title .line:nth-child(1) { animation-delay: 0.5s; }
+  .hero-title .line:nth-child(2) { animation-delay: 0.65s; }
+  .hero-title .line:nth-child(3) { animation-delay: 0.8s; }
+
+  .hero-title .line em { font-style: normal; font-weight: 600; }
+
+  .hero-bottom {
+    margin-top: 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1.2s;
+  }
+
+  .hero-desc {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--gray);
+    max-width: 320px;
+    line-height: 1.7;
+    letter-spacing: 0.02em;
+  }
+
+  .hero-cta { display: flex; gap: 20px; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Raleway', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 14px 32px;
+    border: 1px solid var(--white);
+    color: var(--white);
+    background: transparent;
+    cursor: none;
+    transition: background 0.3s ease, color 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: var(--white);
+    transition: left 0.3s ease;
+    z-index: 0;
+  }
+
+  .btn:hover::before { left: 0; }
+  .btn:hover { color: var(--black); }
+  .btn span { position: relative; z-index: 1; }
+
+  .btn-ghost { border-color: rgba(255,255,255,0.3); color: var(--gray); }
+  .btn-ghost::before { background: rgba(255,255,255,0.08); }
+  .btn-ghost:hover { color: var(--white); }
+
+  .scroll-line { display: none; }
+
+  .divider { width: 100%; height: 1px; background: rgba(255,255,255,0.1); }
+
+  .section { padding: 120px 48px; }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 60px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .about-left h2 {
+    font-size: clamp(32px, 4vw, 56px);
+    font-weight: 300;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  .about-left h2 strong { font-weight: 600; }
+
+  .about-right { padding-top: 8px; }
+
+  .about-right p {
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 24px;
+  }
+
+  .values {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    margin-top: 60px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .value-item {
+    padding: 36px 32px;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: background 0.3s ease;
+  }
+
+  .value-item:hover { background: rgba(255,255,255,0.04); }
+
+  .value-num {
+    font-size: 11px;
+    color: var(--gray);
+    letter-spacing: 0.15em;
+    margin-bottom: 20px;
+    font-weight: 400;
+  }
+
+  .value-title { font-size: 20px; font-weight: 500; margin-bottom: 12px; letter-spacing: -0.01em; }
+  .value-desc { font-size: 14px; color: rgba(255,255,255,0.5); font-weight: 300; line-height: 1.6; }
+
+  .topics-section {
+    padding: 120px 48px;
+    background: var(--white);
+    color: var(--black);
+  }
+
+  .topics-list { display: flex; flex-direction: column; }
+
+  .topic-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    cursor: none;
+    transition: padding-left 0.3s ease;
+    text-decoration: none;
+    color: var(--black);
+  }
+
+  .topic-item:hover { padding-left: 20px; }
+  .topic-item:first-child { border-top: 1px solid rgba(0,0,0,0.1); }
+
+  .topic-name { font-size: clamp(22px, 3vw, 40px); font-weight: 400; letter-spacing: -0.01em; }
+  .topic-meta { display: flex; align-items: center; gap: 24px; }
+  .topic-tag { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(0,0,0,0.4); }
+
+  .topic-arrow {
+    width: 32px; height: 32px;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease, border-color 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  .topic-item:hover .topic-arrow { background: var(--black); border-color: var(--black); }
+  .topic-item:hover .topic-arrow svg path { stroke: var(--white); }
+
+  .newsletter-section {
+    padding: 120px 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .newsletter-left h2 {
+    font-size: clamp(36px, 4.5vw, 64px);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+
+  .newsletter-left p { font-size: 15px; color: var(--gray); font-weight: 300; line-height: 1.7; }
+  .newsletter-form { display: flex; flex-direction: column; gap: 16px; }
+
+  .form-row {
+    display: flex;
+    border: 1px solid rgba(255,255,255,0.2);
+    overflow: hidden;
+    transition: border-color 0.3s ease;
+  }
+
+  .form-row:focus-within { border-color: var(--white); }
+
+  .form-row input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 18px 24px;
+    font-family: 'Raleway', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px;
+    color: var(--white);
+    font-weight: 300;
+    letter-spacing: 0.04em;
+  }
+
+  .form-row input::placeholder { color: rgba(255,255,255,0.3); }
+
+  .form-row button {
+    background: var(--white);
+    border: none;
+    padding: 18px 28px;
+    cursor: none;
+    font-family: 'Raleway', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--black);
+    transition: background 0.3s ease;
+  }
+
+  .form-row button:hover { background: var(--light-gray); }
+  .form-note { font-size: 12px; color: rgba(255,255,255,0.3); font-weight: 300; letter-spacing: 0.04em; }
+
+  .social-strip {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding: 0 48px;
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .social-strip::-webkit-scrollbar { display: none; }
+
+  .social-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 24px 40px 24px 0;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    text-decoration: none;
+    color: var(--white);
+    transition: color 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .social-item:first-child { padding-left: 0; }
+  .social-item:last-child { border-right: none; padding-right: 0; }
+  .social-item:hover { color: var(--gray); }
+
+  .social-name { font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
+  .social-handle { font-size: 12px; color: var(--gray); font-weight: 300; }
+
+  footer {
+    padding: 60px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .footer-left { display: flex; align-items: center; gap: 16px; }
+  .footer-logo svg { width: 28px; height: 28px; }
+  .footer-name { font-size: 14px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
+  .footer-right { font-size: 12px; color: var(--gray); font-weight: 300; letter-spacing: 0.04em; text-align: right; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(100%); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  @media (max-width: 768px) {
+    nav { padding: 24px 24px; }
+    .nav-links { display: none; }
+    .hero { padding: 0 24px 48px; }
+    .hero-bg-logo { width: 90vw; right: -10%; }
+    .hero-bottom { flex-direction: column; align-items: flex-start; gap: 32px; }
+    .section { padding: 80px 24px; }
+    .about-grid { grid-template-columns: 1fr; gap: 48px; }
+    .values { grid-template-columns: 1fr; }
+    .topics-section { padding: 80px 24px; }
+    .topic-tag { font-size: 8px; letter-spacing: 0.08em; }
+    .topic-meta { gap: 12px; }
+    .newsletter-section { padding: 80px 24px; grid-template-columns: 1fr; gap: 48px; }
+    .social-strip { padding: 0 24px; }
+    .social-item { padding: 20px 24px; }
+    footer { padding: 40px 24px; flex-direction: column; gap: 24px; align-items: flex-start; }
+    .hero-cta { flex-direction: column; gap: 12px; }
+  }
+
+
+
+  /* TWO DIRECTIONS */
+  .dirs { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; border: 1px solid rgba(255,255,255,0.1); }
+  .dir { padding: 48px 40px; border: 1px solid rgba(255,255,255,0.1); }
+  .dir-label { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray); margin-bottom: 20px; }
+  .dir-title { font-size: clamp(26px, 2.6vw, 36px); font-weight: 300; line-height: 1.2; margin-bottom: 24px; }
+  .dir-title strong { font-weight: 600; }
+  .dir-text { font-size: 15px; font-weight: 300; line-height: 1.8; color: rgba(255,255,255,0.65); margin-bottom: 28px; }
+  .dir-list { list-style: none; border-top: 1px solid rgba(255,255,255,0.1); }
+  .dir-list li { padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 15px; font-weight: 300; line-height: 1.6; color: rgba(255,255,255,0.85); display: grid; grid-template-columns: 28px 1fr; }
+  .dir-list li::before { content: '→'; color: var(--gray); }
+  @media (max-width: 768px) { .dirs { grid-template-columns: 1fr; } .dir { padding: 36px 24px; } }
+
+  .proj-name { font-size: 17px; font-weight: 500; color: var(--white); margin-bottom: 6px; }
+  .proj-desc { font-size: 14px; font-weight: 300; line-height: 1.6; color: rgba(255,255,255,0.55); }
+
+  /* PHOTOS */
+  .photo {
+    position: relative;
+    background: #141414;
+    border: 1px dashed rgba(255,255,255,0.18);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .photo img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: filter 0.5s ease; display: block; }
+  .photo:hover img { filter: grayscale(0%); }
+  .photo-ph { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.35); text-align: center; padding: 0 16px; line-height: 1.8; }
+  .team-photo { aspect-ratio: 1 / 1; width: 100%; margin-bottom: 28px; border: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .team-photo img { position: absolute; inset: 0; z-index: 1; }
+  .team-fallback { font-size: 40px; font-weight: 300; letter-spacing: 0.1em; color: rgba(255,255,255,0.25); }
+  .team-item .team-name, .team-item .team-role { padding: 0 24px; }
+  @media (max-width: 768px) {
+        }
+
+  /* ABOUT PAGE */
+  .page-hero { padding: 180px 48px 100px; }
+  .page-hero .section-label { margin-bottom: 48px; }
+  .page-hero h1 {
+    font-size: clamp(40px, 6vw, 88px);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    max-width: 1100px;
+  }
+  .page-hero h1 strong { font-weight: 600; }
+  .page-lead {
+    margin-top: 48px;
+    max-width: 720px;
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.7);
+  }
+  .nav-links a.active::after { width: 100%; }
+
+  .topics-section .section-label { color: #666; }
+  .topics-section .section-label::after { background: rgba(0,0,0,0.1); }
+  .what-item {
+    display: grid;
+    grid-template-columns: 80px 1fr 1.4fr;
+    gap: 32px;
+    padding: 32px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    align-items: baseline;
+  }
+  .what-num { font-size: 11px; letter-spacing: 0.15em; color: #888; }
+  .what-title { font-size: clamp(22px, 2.4vw, 32px); font-weight: 500; letter-spacing: -0.01em; }
+  .what-desc { font-size: 15px; font-weight: 300; line-height: 1.7; color: rgba(0,0,0,0.65); }
+
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .team-item {
+    padding: 36px 28px 40px;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: background 0.3s ease;
+  }
+  .team-item:hover { background: rgba(255,255,255,0.04); }
+  .team-initials {
+    width: 56px; height: 56px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 500; letter-spacing: 0.08em;
+    margin-bottom: 28px;
+  }
+  .team-name { font-size: 19px; font-weight: 500; margin-bottom: 8px; letter-spacing: -0.01em; }
+  .team-role { font-size: 13px; color: var(--gray); font-weight: 300; line-height: 1.5; }
+
+  .facts { border-top: 1px solid rgba(255,255,255,0.1); }
+  .fact-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 32px;
+    padding: 22px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .fact-label { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); }
+  .fact-value { font-size: 16px; font-weight: 300; line-height: 1.6; color: rgba(255,255,255,0.85); }
+  .fact-value a { color: inherit; }
+
+  .coop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; border: 1px solid rgba(255,255,255,0.1); }
+  .coop-item { padding: 36px 32px; border: 1px solid rgba(255,255,255,0.1); }
+  .coop-title { font-size: 20px; font-weight: 500; margin-bottom: 12px; }
+  .coop-desc { font-size: 14px; color: rgba(255,255,255,0.55); font-weight: 300; line-height: 1.7; }
+  .coop-cta { margin-top: 48px; display: flex; gap: 16px; flex-wrap: wrap; }
+
+  .team-item { padding: 0 0 36px; }
+
+  @media (max-width: 1024px) {
+    .team-grid { grid-template-columns: 1fr 1fr; }
+    .coop-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 768px) {
+    .page-hero { padding: 140px 24px 72px; }
+    .page-lead { font-size: 16px; }
+    .what-item { grid-template-columns: 1fr; gap: 8px; }
+    .team-grid { grid-template-columns: 1fr; }
+    .fact-row { grid-template-columns: 1fr; gap: 6px; }
+    .nav-links { display: flex; gap: 20px; }
+    .nav-links li:nth-child(n+3) { display: none; }
+    .nav-links a { font-size: 11px; }
+    .nav-logo-text { font-size: 13px; letter-spacing: 0.08em; }
+    .nav-logo { gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<nav id="mainNav">
+  <a href="index.html" class="nav-logo" data-cursor>
+    <svg width="26" height="24" viewBox="0 0 253 231" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M86.5557 65.2538C131.952 65.254 168.61 101.363 168.61 145.733C168.61 190.103 131.952 226.214 86.5557 226.214C41.1594 226.214 4.5 190.104 4.5 145.733C4.50018 101.363 41.1595 65.2538 86.5557 65.2538Z" stroke="white" stroke-width="9"/>
+      <path d="M90.8219 2.58978L226.548 196.344" stroke="white" stroke-width="9"/>
+    </svg>
+    <span class="nav-logo-text">медіа дотичне</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="about.html" class="active" data-cursor>Про нас</a></li>
+    <li><a href="articles.html" data-cursor>Статті</a></li>
+    <li><a href="index.html#newsletter" data-cursor>Розсилка</a></li>
+    <li><a href="https://www.instagram.com/media.dotychne/" target="_blank" data-cursor>Instagram</a></li>
+  </ul>
+</nav>
+
+<section class="page-hero">
+  <div class="section-label">Про нас</div>
+  <h1 class="reveal">Медіа, що <strong>поширює можливості</strong> і підсвічує права</h1>
+  <p class="page-lead reveal reveal-delay-1">ГО «Медіа Дотичне» — незалежне медіа, засноване у Львові у 2026 році. Ми висвітлюємо діяльність громадського сектору, розповідаємо про можливості для людей і організацій та захищаємо права у сфері доступу до інформації і свободи слова.</p>
+  <p class="page-lead reveal reveal-delay-2" style="margin-top:20px">Наша мета — підвищувати рівень освіченості громадян і підтримувати розвиток освітнього та громадського секторів України. Без корпоративних інтересів і без замовних матеріалів.</p>
+</section>
+
+<div class="divider"></div>
+
+<section class="section">
+  <div class="section-label">Що ми робимо</div>
+  <div class="dirs">
+    <div class="dir reveal reveal-delay-1">
+      <div class="dir-label">Як медіа</div>
+      <div class="dir-title">Пишемо про те, що <strong>стосується кожного</strong></div>
+      <p class="dir-text">«Дотичне» — онлайн-медіа, зареєстроване в Реєстрі суб'єктів у сфері медіа (ідентифікатор R40-07241). Ми висвітлюємо діяльність громадського сектору і розповідаємо про можливості для людей і організацій.</p>
+      <ul class="dir-list">
+        <li>Статті про права людини і свободу слова, гранти, освіту, медіапростір і громадські ініціативи</li>
+        <li>Практичні гіди для громадських організацій: від створення ГО до моніторингу та оцінки проєктів</li>
+        <li>Розсилка з матеріалами, які стосуються тебе</li>
+        <li>Instagram, Telegram, Threads і TikTok</li>
+      </ul>
+    </div>
+    <div class="dir reveal reveal-delay-2">
+      <div class="dir-label">Як громадська організація</div>
+      <div class="dir-title">Розвиваємо <strong>проєктний і освітній</strong> напрям</div>
+      <p class="dir-text">З 2020 року ми реалізуємо освітні й правозахисні проєкти для молоді: освіта, медіаграмотність і права людини. Медіа виросло з цього досвіду. Наша мета — підвищувати рівень освіченості громадян і підтримувати розвиток освітнього та громадського секторів України.</p>
+      <ul class="dir-list">
+        <li><div><div class="proj-name">Конкурс «Левеня»</div><div class="proj-desc">Всеукраїнський учнівський конкурс: близько 20 000 учнів з 2 648 шкіл України.</div></div></li>
+        <li><div><div class="proj-name">UniWeek</div><div class="proj-desc">Тиждень для студентства: 300 учасників, 7 днів у ЛНУ імені Івана Франка.</div></div></li>
+        <li><div><div class="proj-name">«Своя гра»</div><div class="proj-desc">Гра з медіаграмотності, яку представимо в 10 школах Львівщини, та онлайн-курс на нашому сайті. Проєкт підтримано грантом Центру громадянських свобод.</div></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="topics-section">
+  <div class="section-label">Про що ми пишемо</div>
+  <div class="what-item reveal">
+    <div class="what-num">01</div>
+    <div class="what-title">Права людини</div>
+    <div class="what-desc">Правозахист, доступ до інформації і свобода слова.</div>
+  </div>
+  <div class="what-item reveal">
+    <div class="what-num">02</div>
+    <div class="what-title">Гранти і можливості</div>
+    <div class="what-desc">Гранти, програми та ініціативи для громадського сектору України.</div>
+  </div>
+  <div class="what-item reveal">
+    <div class="what-num">03</div>
+    <div class="what-title">Освіта</div>
+    <div class="what-desc">Навчання, освіта і розвиток.</div>
+  </div>
+  <div class="what-item reveal">
+    <div class="what-num">04</div>
+    <div class="what-title">Медіапростір</div>
+    <div class="what-desc">Медіаграмотність і безпека в медіапросторі.</div>
+  </div>
+  <div class="what-item reveal">
+    <div class="what-num">05</div>
+    <div class="what-title">НГО</div>
+    <div class="what-desc">Громадські ініціативи та життя громадських організацій.</div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-label">Цінності</div>
+  <div class="values" style="margin-top:0">
+    <div class="value-item reveal reveal-delay-1">
+      <div class="value-num">01</div>
+      <div class="value-title">Незалежність</div>
+      <div class="value-desc">Непідприємницька організація без майнового інтересу. Тільки суспільна місія.</div>
+    </div>
+    <div class="value-item reveal reveal-delay-2">
+      <div class="value-num">02</div>
+      <div class="value-title">Права і свободи</div>
+      <div class="value-desc">Захист прав людини у сфері доступу до інформації, свободи слова та безпеки в медіапросторі.</div>
+    </div>
+    <div class="value-item reveal reveal-delay-3">
+      <div class="value-num">03</div>
+      <div class="value-title">Можливості</div>
+      <div class="value-desc">Поширюємо інформацію про гранти, програми та ініціативи для громадського сектору України.</div>
+    </div>
+    <div class="value-item reveal reveal-delay-4">
+      <div class="value-num">04</div>
+      <div class="value-title">Освіта</div>
+      <div class="value-desc">Підвищуємо рівень освіченості громадян і підтримуємо розвиток освітнього сектору.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="section">
+  <div class="section-label">Команда</div>
+  <div class="team-grid">
+    <div class="team-item reveal reveal-delay-1">
+      <div class="photo team-photo"><img src="images/team/kulhavets.jpg" alt="Яромир Кульгавець" loading="lazy" onerror="this.remove()"><div class="photo-ph team-fallback">ЯК</div></div>
+      <div class="team-name">Яромир Кульгавець</div>
+      <div class="team-role">Голова ГО</div>
+    </div>
+    <div class="team-item reveal reveal-delay-2">
+      <div class="photo team-photo"><img src="images/team/havrysh.jpg" alt="Катерина Гавриш" loading="lazy" onerror="this.remove()"><div class="photo-ph team-fallback">КГ</div></div>
+      <div class="team-name">Катерина Гавриш</div>
+      <div class="team-role">Перша заступниця голови</div>
+    </div>
+    <div class="team-item reveal reveal-delay-3">
+      <div class="photo team-photo"><img src="images/team/pilhui.jpg" alt="Вероніка Пільгуй" loading="lazy" onerror="this.remove()"><div class="photo-ph team-fallback">ВП</div></div>
+      <div class="team-name">Вероніка Пільгуй</div>
+      <div class="team-role">Головна редакторка</div>
+    </div>
+    <div class="team-item reveal reveal-delay-4">
+      <div class="photo team-photo"><img src="images/team/shykh.jpg" alt="Анна Ших" loading="lazy" onerror="this.remove()"><div class="photo-ph team-fallback">АШ</div></div>
+      <div class="team-name">Анна Ших</div>
+      <div class="team-role">Журналістка</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="section">
+  <div class="section-label">Співпраця</div>
+  <div class="coop-grid">
+    <div class="coop-item reveal reveal-delay-1">
+      <div class="coop-title">Партнерства</div>
+      <div class="coop-desc">Відкриті до спільних проєктів з громадськими організаціями, університетами та ініціативами.</div>
+    </div>
+    <div class="coop-item reveal reveal-delay-3">
+      <div class="coop-title">Ваша історія</div>
+      <div class="coop-desc">Знаєте про можливість, порушення прав чи ініціативу, про яку варто написати? Розкажіть нам.</div>
+    </div>
+  </div>
+  <div class="coop-cta">
+    <a href="mailto:media.dotychne@gmail.com" class="btn" data-cursor><span>Написати нам</span></a>
+    <a href="articles.html" class="btn btn-ghost" data-cursor><span>Читати статті</span></a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="section">
+  <div class="section-label">Офіційна інформація</div>
+  <div class="facts">
+    <div class="fact-row"><div class="fact-label">Повна назва</div><div class="fact-value">Громадська організація «Медіа Дотичне»</div></div>
+    <div class="fact-row"><div class="fact-label">Код ЄДРПОУ</div><div class="fact-value">43491858</div></div>
+    <div class="fact-row"><div class="fact-label">Статус медіа</div><div class="fact-value">Онлайн-медіа, зареєстроване в Реєстрі суб'єктів у сфері медіа. Ідентифікатор медіа: R40-07241</div></div>
+    <div class="fact-row"><div class="fact-label">Адреса</div><div class="fact-value">вул. М. Гориня, 25, оф. 7, м. Львів, 79049</div></div>
+    <div class="fact-row"><div class="fact-label">Контакти</div><div class="fact-value"><a href="mailto:media.dotychne@gmail.com">media.dotychne@gmail.com</a> · <a href="tel:+380935418289">+380 93 541 82 89</a></div></div>
+    <div class="fact-row"><div class="fact-label">Соцмережі</div><div class="fact-value"><a href="https://www.instagram.com/media.dotychne/" target="_blank">Instagram</a> · <a href="https://t.me/media_dotychne" target="_blank">Telegram</a> · <a href="https://www.threads.net/@media.dotychne" target="_blank">Threads</a> · <a href="https://www.tiktok.com/@media.dotychne" target="_blank">TikTok</a></div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-left">
+    <div class="footer-logo">
+      <svg width="28" height="26" viewBox="0 0 253 231" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M86.5557 65.2538C131.952 65.254 168.61 101.363 168.61 145.733C168.61 190.103 131.952 226.214 86.5557 226.214C41.1594 226.214 4.5 190.104 4.5 145.733C4.50018 101.363 41.1595 65.2538 86.5557 65.2538Z" stroke="white" stroke-width="9"/>
+        <path d="M90.8219 2.58978L226.548 196.344" stroke="white" stroke-width="9"/>
+      </svg>
+    </div>
+    <span class="footer-name">Медіа Дотичне</span>
+  </div>
+  <div class="footer-right">
+    <div>© 2026 ГО «Медіа Дотичне»</div>
+    <div style="margin-top: 4px;">Львів · ЄДРПОУ 43491858</div>
+    <div style="margin-top: 8px; opacity: 0.75;">
+      Ідентифікатор медіа в Реєстрі суб'єктів у сфері медіа: R40-07241<br>
+      вул. М. Гориня, 25, оф. 7, м. Львів, 79049 · +380 93 541 82 89 · <a href="mailto:media.dotychne@gmail.com" style="color:inherit;text-decoration:underline;">media.dotychne@gmail.com</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('[data-cursor], a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+  });
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 60));
+</script>
+</body>
+</html>
