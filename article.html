@@ -704,6 +704,13 @@
     const params = new URLSearchParams(window.location.search);
     const pageId = params.get('id');
 
+    // Стаття вже вставлена сервером (worker.js) — лише підтягуємо «Читайте також»
+    if (window.__SSR_ARTICLE__ && pageId) {
+      document.getElementById('relatedSection').style.display = 'block';
+      loadRelated(pageId, document.getElementById('articleCategory').textContent);
+      return;
+    }
+
     if (!pageId) {
       showNotFound();
       return;
@@ -742,7 +749,7 @@
       const title = p?.Title?.title?.[0]?.plain_text || p?.Name?.title?.[0]?.plain_text || 'Без назви';
       const excerpt = p?.Excerpt?.rich_text?.[0]?.plain_text || '';
       const category = p?.Category?.select?.name || '';
-      const author = p?.Author?.rich_text?.[0]?.plain_text || 'Редакція';
+      const author = p?.Author?.rich_text?.[0]?.plain_text || (p?.Author?.people || []).map(u => u.name).filter(Boolean).join(', ') || 'Редакція';
       const date = p?.Date?.date?.start || '';
       const cover = page.cover?.external?.url || page.cover?.file?.url || '';
 

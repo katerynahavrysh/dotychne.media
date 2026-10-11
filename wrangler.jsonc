@@ -1,12 +1,16 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "dotychnemedia",
+  "main": "worker.js",
+  "keep_vars": true,
   "compatibility_date": "2025-09-27",
   "observability": {
     "enabled": true
   },
   "assets": {
-    "directory": "."
+    "directory": ".",
+    "binding": "ASSETS",
+    "run_worker_first": true
   },
   "compatibility_flags": [
     "nodejs_compat"
