@@ -12,6 +12,9 @@
     "binding": "ASSETS",
     "run_worker_first": true
   },
+  "kv_namespaces": [
+    { "binding": "TEAM_KV", "id": "c54a04b673ff498c9de62e957714a2fe" }
+  ],
   "compatibility_flags": [
     "nodejs_compat"
   ]
