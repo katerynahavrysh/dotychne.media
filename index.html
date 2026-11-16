@@ -497,8 +497,10 @@
     .hero-cta { flex-direction: column; gap: 12px; }
   }
 </style>
+<link rel="stylesheet" href="a11y.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Перейти до змісту</a>
 
 <div class="cursor" id="cursor"></div>
 
@@ -517,6 +519,8 @@
     <li><a href="https://www.instagram.com/media.dotychne/" target="_blank" data-cursor>Instagram</a></li>
   </ul>
 </nav>
+
+<main id="main" tabindex="-1">
 
 <section class="hero">
   <div class="hero-bg-logo">
@@ -710,6 +714,8 @@
   </a>
 </div>
 
+</main>
+
 <footer>
   <div class="footer-left">
     <div class="footer-logo">
@@ -799,5 +805,6 @@
     }).catch(() => {});
   }, 1500);
 </script>
+<script src="a11y.js"></script>
 </body>
 </html>
