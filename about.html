@@ -626,8 +626,10 @@
     .nav-logo { gap: 8px; }
   }
 </style>
+<link rel="stylesheet" href="a11y.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Перейти до змісту</a>
 
 <div class="cursor" id="cursor"></div>
 
@@ -646,6 +648,8 @@
     <li><a href="https://www.instagram.com/media.dotychne/" target="_blank" data-cursor>Instagram</a></li>
   </ul>
 </nav>
+
+<main id="main" tabindex="-1">
 
 <section class="page-hero">
   <div class="section-label">Про нас</div>
@@ -802,6 +806,8 @@
   </div>
 </section>
 
+</main>
+
 <footer>
   <div class="footer-left">
     <div class="footer-logo">
@@ -839,5 +845,6 @@
   const nav = document.getElementById('mainNav');
   window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 60));
 </script>
+<script src="a11y.js"></script>
 </body>
 </html>
