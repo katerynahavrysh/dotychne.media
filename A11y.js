@@ -72,6 +72,25 @@
     sync();
   }
 
+  // «Перейти до змісту»: фокус на перший видимий заголовок у змісті + підсвітка
+  function skipLink() {
+    var link = document.querySelector('.skip-link');
+    if (!link) return;
+    link.addEventListener('click', function (e) {
+      var main = document.getElementById('main');
+      if (!main) return;
+      e.preventDefault();
+      var visible = function (el) { var r = el.getBoundingClientRect(); return r.width > 2 && r.height > 2 && getComputedStyle(el).visibility !== 'hidden'; };
+      var target = Array.prototype.find.call(main.querySelectorAll('h1, h2, h3'), visible) || main;
+      if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+      target.classList.add('a11y-skip-target');
+      target.focus({ preventScroll: true });
+      var y = target.getBoundingClientRect().top + window.scrollY - 110;
+      window.scrollTo({ top: Math.max(0, y), behavior: 'auto' });
+      setTimeout(function () { target.classList.remove('a11y-skip-target'); }, 2500);
+    });
+  }
+
   function landmarks() {
     // Позначаємо декоративні елементи, щоб їх не зачитував скрінрідер
     document.querySelectorAll('.cursor, .cursor-ring, .cursor-follower, .hero-bg-logo').forEach(function (el) { el.setAttribute('aria-hidden', 'true'); });
@@ -82,6 +101,6 @@
     });
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { build(); landmarks(); });
-  else { build(); landmarks(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { build(); landmarks(); skipLink(); });
+  else { build(); landmarks(); skipLink(); }
 })();
