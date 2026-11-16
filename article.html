@@ -505,8 +505,10 @@
     .article-meta-row { flex-direction: column; align-items: flex-start; }
   }
 </style>
+<link rel="stylesheet" href="a11y.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Перейти до змісту</a>
 
 <div class="cursor" id="cursor"></div>
 
@@ -525,6 +527,8 @@
     Всі статті
   </a>
 </nav>
+
+<main id="main" tabindex="-1">
 
 <!-- LOADING -->
 <div class="loading-state" id="loadingState">
@@ -583,6 +587,8 @@
   <div class="related-label">Читайте також</div>
   <div class="related-grid" id="relatedGrid"></div>
 </section>
+
+</main>
 
 <footer>
   <div class="footer-logo">
@@ -854,5 +860,6 @@
 
   loadArticle();
 </script>
+<script src="a11y.js"></script>
 </body>
 </html>
