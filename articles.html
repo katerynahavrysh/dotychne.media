@@ -611,8 +611,10 @@
     .error-state { padding: 48px 20px; }
   }
 </style>
+<link rel="stylesheet" href="a11y.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Перейти до змісту</a>
 
 <div class="cursor" id="cursor"></div>
 
@@ -644,7 +646,8 @@
   </div>
 </nav>
 
-<main>
+<main id="main" tabindex="-1">
+  <h1 class="sr-only">Статті</h1>
   <!-- LOADING -->
   <div class="loading-state" id="loadingState">
     <svg class="loading-symbol" viewBox="0 0 253 231" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -974,5 +977,6 @@
     }).catch(() => {});
   }, 2000);
 </script>
+<script src="a11y.js"></script>
 </body>
 </html>
